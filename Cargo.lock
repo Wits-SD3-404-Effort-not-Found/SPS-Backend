@@ -1303,6 +1303,7 @@ dependencies = [
  "lazy_static",
  "log",
  "rocket",
+ "serde",
  "simple_logger",
  "systemd-journal-logger",
  "tokio",
