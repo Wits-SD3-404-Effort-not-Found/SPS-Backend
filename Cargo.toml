@@ -6,4 +6,7 @@ edition = "2021"
 # See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
 
 [dependencies]
+log = "0.4.17"
 rocket = "=0.5.0-rc.3"
+simple_logger = "4.1.0"
+systemd-journal-logger = "0.7.0"
