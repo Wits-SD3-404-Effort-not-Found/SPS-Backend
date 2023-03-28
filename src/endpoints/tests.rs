@@ -3,7 +3,7 @@ use rocket::local::blocking::Client;
 use rocket::http::Status;
 
 #[test]
-fn test_index() {
+fn test_index_none_ok() {
     let client = Client::tracked(rocket()).expect("Valid Rocket Instance");
 
     let ok_response = client.get(uri!(super::index)).dispatch();
