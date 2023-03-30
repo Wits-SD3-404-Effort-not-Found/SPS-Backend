@@ -1,4 +1,5 @@
 mod endpoints;
+mod sps;
 mod db;
 
 // Any errors croping up on the next 3 lines can just be ignored
@@ -35,12 +36,19 @@ fn rocket() -> _ {
         init_with_extra_fields(vec![("CARGO_VERSION", env!("CARGO_PKG_VERSION"))]).unwrap();
     } else {
         // Else just use stdout to write logs
-        SimpleLogger::new().init().unwrap()
+        match SimpleLogger::new().init() {
+            Err(e) => println!("Logger Error: {e}"),
+            _ => ()
+        }
     }
 
     rocket::build()
         .mount("/", routes![
-            endpoints::index
+            endpoints::index,
+            endpoints::auth_credentials,
+            endpoints::auth_session,
+            endpoints::auth_forgot,
+            endpoints::auth_otp
         ])
         .attach(db::SPS::init())
 }
