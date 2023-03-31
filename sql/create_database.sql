@@ -3,7 +3,7 @@ USE Apollonius;
 
 
 CREATE TABLE tblAccount (
-  id INT PRIMARY KEY,
+  id INT PRIMARY KEY AUTO_INCREMENT,
   email VARCHAR(255) NOT NULL,
   hashed_password VARCHAR(255) NOT NULL,
   username VARCHAR(255) NOT NULL,
@@ -12,17 +12,17 @@ CREATE TABLE tblAccount (
 );
 
 CREATE TABLE tblHospital (
-  id INT PRIMARY KEY,
+  id INT PRIMARY KEY AUTO_INCREMENT,
   name VARCHAR(255) NOT NULL
 );
 
 CREATE TABLE tblDiscipline (
-  id INT PRIMARY KEY,
+  id INT PRIMARY KEY AUTO_INCREMENT,
   name VARCHAR(255) NOT NULL
 );
 
 CREATE TABLE tblSessionToken (
-  id INT PRIMARY KEY,
+  id INT PRIMARY KEY AUTO_INCREMENT,
   account_id INT NOT NULL,
   token VARCHAR(255) NOT NULL,
   expiry_date DATE NOT NULL,
@@ -30,7 +30,7 @@ CREATE TABLE tblSessionToken (
 );
 
 CREATE TABLE tblNotes (
-  id INT PRIMARY KEY,
+  id INT PRIMARY KEY AUTO_INCREMENT,
   note_id INT NOT NULL,
   account_id INT NOT NULL,
   title VARCHAR(255) NOT NULL,
@@ -39,21 +39,21 @@ CREATE TABLE tblNotes (
 );
 
 CREATE TABLE tblProtocol (
-  id INT PRIMARY KEY,
+  id INT PRIMARY KEY AUTO_INCREMENT,
   protocol_id INT NOT NULL,
   title VARCHAR(255) NOT NULL,
   content TEXT
 );
 
 CREATE TABLE tblLogbook (
-  id INT PRIMARY KEY,
+  id INT PRIMARY KEY AUTO_INCREMENT,
   logbook_id INT NOT NULL,
   account_id INT NOT NULL,
   FOREIGN KEY (account_id) REFERENCES tblAccount(id)
 );
 
 CREATE TABLE tblEvents (
-  id INT PRIMARY KEY,
+  id INT PRIMARY KEY AUTO_INCREMENT,
   event_id INT NOT NULL,
   account_id INT NOT NULL,
   start_date DATE NOT NULL,
@@ -64,7 +64,7 @@ CREATE TABLE tblEvents (
 );
 
 CREATE TABLE tblRotation (
-  id INT PRIMARY KEY,
+  id INT PRIMARY KEY AUTO_INCREMENT,
   rotation_id INT NOT NULL,
   start_date DATE NOT NULL,
   end_date DATE NOT NULL,
@@ -75,7 +75,7 @@ CREATE TABLE tblRotation (
 );
 
 CREATE TABLE tblAssignedRotations (
-  id INT PRIMARY KEY,
+  id INT PRIMARY KEY AUTO_INCREMENT,
   rotation_id INT NOT NULL,
   account_id INT NOT NULL,
   FOREIGN KEY (rotation_id) REFERENCES tblRotation(id),
