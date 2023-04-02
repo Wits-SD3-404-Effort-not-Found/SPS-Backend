@@ -22,8 +22,11 @@ pub async fn index(mut db: Connection<SPS>) -> &'static str {
     let settings = SETTINGS.read().await;
     log::info!("test {}", settings.get::<String>("test_value").unwrap());
 
-    let row = sqlx::query("SELECT * FROM tblAccount").fetch_one(&mut *db).await.unwrap();
-    dbg!(row);
+    sqlx::query("SELECT * FROM tblAccount").fetch_one(&mut *db).await
+        .and_then(|r| 
+            dbg!(r.try_get::<String, usize>(1))
+        )
+        .ok();
 
     "Wits Student Placement System API"
 }
@@ -42,6 +45,7 @@ pub async fn index(mut db: Connection<SPS>) -> &'static str {
 /// 2. 401 Unauthorized - Provided invalid authentication credentials
 #[post("/authentication/credentials", data = "<credentials>")]
 pub async fn auth_credentials(
+    mut db: Connection<SPS>,
     credentials: Json<api::AuthRequest>,
 ) -> ApiResult<Json<api::AuthResponse>> {
 
@@ -56,8 +60,34 @@ pub async fn auth_credentials(
         return Err(errors::ApiErrors::Unauth("Invalid email address provided".to_string()));
     }
 
+
+    let new_account = false;
+    // let db_account = sqlx::query("SELECT * FROM tblAccount")
+    //         // .bind(&credentials.email)
+    //         .fetch_one(&mut *db).await
+    //         .and_then(|r| {
+    //             log::info!("HERE");
+    //             // match r {
+    //             //     Some(val) => Ok(val),
+    //             //     None => Ok(Account::default())
+    //             // }
+    //             Ok(())
+    //         }).ok();
+    let result = sqlx::query("SELECT * FROM tblAccount WHERE email = ?").bind(&credentials.email).fetch_one(&mut *db).await
+        .and_then(|r| {
+            Ok(Account {
+                account_id: r.try_get::<i32, usize>(0).unwrap(),
+                email: r.try_get::<String, usize>(1).unwrap(),
+                hashed_password: r.try_get::<String, usize>(2).unwrap(),
+                username: r.try_get::<String, usize>(3).unwrap(),
+                cell_number: r.try_get::<String, usize>(4).unwrap(),
+                profile_photo: "".to_string()
+            })
+        })
+        .ok();
+
     let mut new_account = false;
-    let db_account = match Account::fetch_account(credentials.email.clone()).await {
+    let db_account =  match result {
         None => {
             // If no account is found, create a new one and then return the account id.
             // Front end can then handle populating the newly created user profile
@@ -66,16 +96,23 @@ pub async fn auth_credentials(
             // but we don't have access to that database just yet. This is a work around that
             // means we can maintain the whole appearance of never signing up while still 
             // actually having a sign up process. Its just obfuscated
-            log::info!("No database account found for recieved email");
+            log::info!("No database account found for received email");
             new_account = true;
             Account {
                 account_id: 0,
                 email: credentials.email.clone(),
-                hashed_password: credentials.email.clone()
+                hashed_password: credentials.hashed_password.clone(),
+                username: "".to_string(),
+                cell_number: "".to_string(),
+                profile_photo: "".to_string()
             }
         },
         Some(val) => val,
     };
+
+    if &db_account.hashed_password != &credentials.hashed_password {
+        return Err(errors::ApiErrors::Unauth("Incorrect provided password".to_string()))
+    }
 
     let token = super::sps::auth::session_token::generate_session_token(&db_account).await;
     Ok(Json(super::sps::auth::account::api::AuthResponse {

@@ -3,11 +3,9 @@ use hex;
 
 #[tokio::test]
 async fn test_generate_session_token_expected_input_correct_token() {
-    let test_account = Account {
-        account_id: 123,
-        email: "testEmailAddress@gmail.com".to_string(),
-        hashed_password: "test_password+1".to_string()
-    };
+    let mut test_account = Account::default();
+    test_account.email = "testEmailAddress@gmail.com".to_string();
+    test_account.hashed_password = "test_password+1".to_string();
 
     let token_result = super::session_token::generate_session_token(&test_account).await;
     let hex_result = hex::decode(&token_result.token); // if this fails then its an invalid hex string

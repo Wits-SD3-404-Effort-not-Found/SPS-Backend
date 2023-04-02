@@ -8,7 +8,7 @@ use chrono::{
 use super::account::Account;
 
 pub struct SessionToken {
-    pub account_id: u64,
+    pub account_id: i32,
     pub token: String,
     pub expiray_date: DateTime<Utc>,
 } 

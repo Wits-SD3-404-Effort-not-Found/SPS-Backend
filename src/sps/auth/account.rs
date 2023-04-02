@@ -1,16 +1,21 @@
+use crate::db::SPS;
+
+use rocket_db_pools::sqlx;
+use rocket_db_pools::Connection;
+
+#[derive(sqlx::FromRow, Debug, Default)]
 pub struct Account {
-    pub account_id: u64,
+    pub account_id: i32,
     pub email: String,
-    pub hashed_password: String
+    pub hashed_password: String,
+    pub username: String,
+    pub cell_number: String,
+    pub profile_photo: String
 }
 
 impl Account {
-    pub async fn fetch_account(email: String) -> Option<Self> {
-        Some(Account {
-            account_id: 0,
-            email,
-            hashed_password: "".to_string()
-        })
+    pub async fn fetch_account(db: &mut Connection<SPS>, email: String) -> Option<Self> {
+        None
     }
 }
 
@@ -26,7 +31,7 @@ pub mod api {
     #[derive(Serialize, Deserialize, Debug)]
     pub struct AuthResponse {
         pub session_token: String,
-        pub account_id: u64,
+        pub account_id: i32,
         pub days_to_token_expirary: u32,
         pub new_account: bool,
     }
