@@ -1,4 +1,5 @@
 mod endpoints;
+mod db;
 
 // Any errors croping up on the next 3 lines can just be ignored
 #[macro_use]
@@ -13,6 +14,7 @@ use systemd_journal_logger::{
 use config::Config;
 use lazy_static::lazy_static;
 use tokio::sync::RwLock;
+use rocket_db_pools::Database;
 
 // Add all our settings to a global variable
 // RwLock - https://docs.rs/tokio/1.26.0/tokio/sync/struct.RwLock.html
@@ -40,4 +42,5 @@ fn rocket() -> _ {
         .mount("/", routes![
             endpoints::index
         ])
+        .attach(db::SPS::init())
 }
