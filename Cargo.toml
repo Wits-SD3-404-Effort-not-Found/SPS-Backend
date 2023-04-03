@@ -6,3 +6,20 @@ edition = "2021"
 # See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
 
 [dependencies]
+chrono = "0.4.24"
+config = "0.13.3"
+eyre = "0.6.8"
+hex = "0.4.3"
+lazy_static = "1.4.0"
+log = "0.4.17"
+regex = "1.7.3"
+rocket = {version = "=0.5.0-rc.3", features = ["json"]}
+rust-crypto = "0.2.36"
+serde = "1.0.158"
+serde_json = "1.0.95"
+simple_logger = "4.1.0"
+systemd-journal-logger = "0.7.0"
+tokio = { version = "1.26.0", features = ["sync"] }
+rocket_db_pools = { version = "=0.1.0-rc.3", features = ["sqlx_mysql"]}
+sqlx = "0.6.3"
+tokio-stream = "0.1.12"
