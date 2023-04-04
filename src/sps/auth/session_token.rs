@@ -13,6 +13,9 @@ pub struct SessionToken {
     pub expiray_date: DateTime<Utc>,
 } 
 
+// Generate a unique Hash session token based off the account requesting
+// the token, and the time it was requested. Helps keep the tokens unique
+// even if multiple requests from the same account or same time happen
 pub async fn generate_session_token(account: &Account) -> SessionToken {
     let timestamp_millis = Utc::now().timestamp_millis().to_string();
     let email = &account.email;
