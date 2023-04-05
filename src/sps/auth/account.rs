@@ -13,21 +13,25 @@ pub struct Account {
     pub profile_photo: String
 }
 
+// Depracated -> Was using this but never removed it after I stopped because I was debugging
 impl Account {
     pub async fn fetch_account(db: &mut Connection<SPS>, email: String) -> Option<Self> {
         None
     }
 }
 
+// Api module to describe account authorization
 pub mod api {
     use serde::{Deserialize, Serialize};
 
+    // Json body schema of credential authentication requests
     #[derive(Serialize, Deserialize, Debug, PartialEq, Eq, PartialOrd, Ord)]
     pub struct AuthRequest {
         pub email: String,
         pub hashed_password: String,
     }
 
+    // Json body schema of credential authentication responses 
     #[derive(Serialize, Deserialize, Debug)]
     pub struct AuthResponse {
         pub session_token: String,

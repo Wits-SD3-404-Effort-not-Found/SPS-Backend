@@ -42,6 +42,7 @@ fn rocket() -> _ {
         }
     }
 
+    // Rocket HTTP server creation routine
     rocket::build()
         .mount("/", routes![
             endpoints::index,

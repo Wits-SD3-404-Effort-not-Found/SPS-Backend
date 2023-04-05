@@ -1,5 +1,7 @@
 use rocket::response::Responder;
 
+// Custom Rocket Error handler
+// Mostly for future proofing convenience atm
 #[derive(Responder, Debug)]
 pub enum ApiErrors {
     #[response(status = 401)]

@@ -1,4 +1,4 @@
-name: Rust
+name: SPS Backend CI
 
 on:
   push:
@@ -8,17 +8,28 @@ on:
 
 env:
   CARGO_TERM_COLOR: always
+  ROCKET_DATABASES: ${{ secrets.DB_URL }}
 
 jobs:
-  build:
-
+  tests:
     runs-on: ubuntu-latest
-    env:
-      ROCKET_DATABASES: ${{ secrets.DB_URL }}
     steps:
-    - uses: actions/checkout@v3
-    - name: Build
-      run: cargo build --verbose
-    - uses: Swatinem/rust-cache@v2 
-    - name: Run tests
-      run: cargo test --verbose
+      - uses: actions/checkout@v3
+      - name: Testing
+        run: cargo test --verbose
+      - run: cargo install cargo-binstall
+      - run: cargo binstall cargo-tarpaulin -y
+      - name: Code Coverage
+        run: cargo tarpaulin --verbose --all-features --workspace --timeout 120 --out Xml
+      - name: Upload Code Coverage
+        uses: codecov/codecov-action@v3.1.1
+        with:
+          fail_ci_if_error: true
+
+  build:
+    runs-on: ubuntu-latest
+    needs: tests
+    steps:
+      - uses: actions/checkout@v3
+      - name: Build
+        run: cargo build --verbose
