@@ -75,7 +75,7 @@ pub async fn auth_credentials(mut db_conn: Connection<SPS>, credentials: Json<cr
         return Err(ApiErrors::Unauth("Incorrect provided password".to_string()))
     }
 
-    let token = "".to_string(); //TODO
+    let token = session_token::generate_session_token(&db_account).token;
     Ok(Json(credentials::CredentialReponse {
         session_token: token,
         account_id: db_account.id,
