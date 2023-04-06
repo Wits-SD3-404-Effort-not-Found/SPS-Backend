@@ -121,3 +121,23 @@ pub async fn auth_forgot(forgot: Json<otp::ForgotRequest>) -> ApiResult<Json<otp
 pub async fn auth_otp(otp: Json<otp::OTPRequest>) -> ApiResult<()> {
     todo!()
 }
+
+/// ## Authenticate a session token
+///
+/// ### Arguments
+/// ```json
+///     {
+///         "account_id": i32,
+///         "token": string
+///     }
+/// ```
+///
+/// ### Possible Responses
+///
+/// * 200 Ok
+/// * 401 Unauthorized
+/// * 404 Not Found
+#[post("/authentication/session", data = "<token>")]
+pub async fn auth_session(token: Json<session_token::TokenRequest>) -> ApiResult<()> {
+    todo!()
+}

@@ -30,18 +30,3 @@ pub async fn index(mut db: Connection<SPS>) -> &'static str {
 
     "Wits Student Placement System API"
 }
-
-/// The api endpoint for session authentication.
-/// Will reutrn the authentication result.
-///
-///	# Arguments
-///
-/// # Possible Responses
-///	1. 200 Ok - Provided valid session token and account id
-///	2. 401 Unauthorized - Provided invalid session token or account id
-#[post("/authentication/session", data = "<token>")]
-pub async fn auth_session(token: Json<auth::session_token::RequestBody>) -> ApiResult<()> {
-    dbg!(token);
-
-    Ok(())
-}
