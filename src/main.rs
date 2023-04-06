@@ -46,7 +46,7 @@ fn rocket() -> _ {
     rocket::build()
         .mount("/", routes![
             endpoints::index,
-            endpoints::auth_credentials,
+            endpoints::auth::auth_credentials,
             endpoints::auth_session,
             endpoints::auth_forgot,
             endpoints::auth_otp

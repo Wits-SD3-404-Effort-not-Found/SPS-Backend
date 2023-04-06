@@ -16,6 +16,6 @@ pub struct Account {
     pub email: String,
     pub hashed_password: String,
     pub username: String,
-    pub cell_number: String,
-    pub profile_photo: Vec<u8>
+    pub cell_number: Option<String>,
+    pub profile_photo: Option<Vec<u8>>
 }
