@@ -45,18 +45,3 @@ pub async fn auth_session(token: Json<auth::session_token::RequestBody>) -> ApiR
 
     Ok(())
 }
-
-/// The api endpoint for authenticating a one-time-pin
-/// Will return the authentication result
-///
-/// # Arguments
-///
-///	# Possible Responses
-/// 1. 200 Ok - Provided correct OTP value
-/// 2. 401 Unauthorized - Provided incorrect OTP value
-#[post("/authentication/otp", data = "<otp>")]
-pub async fn auth_otp(otp: Json<auth::otp::RequestBody>) -> ApiResult<()> {
-    dbg!(otp);
-
-    Ok(())
-}

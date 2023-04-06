@@ -101,3 +101,23 @@ pub async fn auth_credentials(mut db_conn: Connection<SPS>, credentials: Json<cr
 pub async fn auth_forgot(forgot: Json<otp::ForgotRequest>) -> ApiResult<Json<otp::ForgotResponse>> {
     todo!()
 }
+
+/// ## Authenticate OTP for resetting password
+///
+/// ### Arguments
+/// ```json
+///     {
+///         "account_id": int,
+///         "otp": string
+///     }
+/// ```
+///
+/// ### Possible Responses
+///
+/// * 200 Ok
+/// * 401 Unauthorized
+/// * 404 Not Found
+#[post("/authentication/otp", data = "<otp>")]
+pub async fn auth_otp(otp: Json<otp::OTPRequest>) -> ApiResult<()> {
+    todo!()
+}
