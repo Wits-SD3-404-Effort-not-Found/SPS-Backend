@@ -46,21 +46,6 @@ pub async fn auth_session(token: Json<auth::session_token::RequestBody>) -> ApiR
     Ok(())
 }
 
-/// The api endpoint for forgot password and email authentication
-/// Will return if the email is found
-///
-/// # Arguments
-///
-///	# Possible Responses
-///	1. 200 Ok - Provided email address is found in the database
-///	2. 404 Not Found - Provided email address is not found in the database
-#[post("/authentication/forgot", data = "<email>")]
-pub async fn auth_forgot(email: Json<auth::otp::email::RequestBody>) -> ApiResult<()> {
-    dbg!(email);
-
-    Ok(())
-}
-
 /// The api endpoint for authenticating a one-time-pin
 /// Will return the authentication result
 ///

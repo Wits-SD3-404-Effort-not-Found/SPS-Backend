@@ -17,7 +17,8 @@ use crate::db::{self, SPS};
 
 /// ## Authenticate User Credentials
 ///
-/// ## Arguments
+/// ### Arguments
+///
 /// ```json
 ///     {
 ///         "email": string,
@@ -80,4 +81,23 @@ pub async fn auth_credentials(mut db_conn: Connection<SPS>, credentials: Json<cr
         account_id: db_account.id,
         new_account: is_new_account
     }))
+}
+
+/// ## Send email for forgot password
+///
+/// ### Arguments
+///
+/// ```json
+///     {
+///         "email": string
+///     }
+/// ```
+///
+/// ### Possible Responses
+///
+/// * 200 Ok
+/// * 404 Not Found
+#[post("/authentication/forgot", data = "<forgot>")]
+pub async fn auth_forgot(forgot: Json<otp::ForgotRequest>) -> ApiResult<Json<otp::ForgotResponse>> {
+    todo!()
 }
