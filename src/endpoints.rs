@@ -4,15 +4,11 @@ mod tests;
 pub mod auth;
 mod errors;
 
-use rocket::serde::json::Json;
-use regex::Regex;
-
-use errors::ApiResult;
-use crate::{SETTINGS, sps::auth::account::Account};
-use crate::sps::auth::account::api;
 use rocket_db_pools::sqlx::{self, Row};
 use rocket_db_pools::Connection;
+
 use crate::db::SPS;
+use crate::SETTINGS;
 
 // Code Demo:
 //  for defining an index
