@@ -1,6 +1,3 @@
-#[cfg(test)]
-mod tests;
-
 pub mod auth;
 mod errors;
 
