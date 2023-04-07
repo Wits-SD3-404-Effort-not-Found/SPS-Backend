@@ -23,13 +23,13 @@ pub struct SessionToken {
 pub fn generate_session_token(account: &Account) -> SessionToken {
     let timestamp_millis = Utc::now().timestamp_millis().to_string();
     let email = &account.email;
-    let id = account.id.to_string();
+    let id = account.account_id.to_string();
 
     let mut hasher = Sha256::new();
     hasher.input_str(format!("{}{}{}", timestamp_millis, email, id).as_str());
 
     SessionToken {
-        account_id: account.id,
+        account_id: account.account_id,
         token: hasher.result_str(),
         expiray_date: Utc::now().add(Days::new(180))
     }

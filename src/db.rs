@@ -12,7 +12,7 @@ pub struct SPS(sqlx::MySqlPool);
 /// > profile_photo is a blob in the database
 #[derive(sqlx::FromRow, Debug, Default)]
 pub struct Account {
-    pub id: i32,
+    pub account_id: i32,
     pub email: String,
     pub hashed_password: String,
     pub username: String,
