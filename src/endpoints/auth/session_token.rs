@@ -1,9 +1,57 @@
 use serde::{Deserialize, Serialize};
+use crypto::{ sha2::Sha256, digest::Digest };
+use chrono::{ prelude::*, naive::Days };
+use std::ops::Add;
 
-// THis should be moved and renamed. Thought I did that already but
-// apparently not. I'll fix it sprint 2
+use crate::db::Account;
+
 #[derive(Serialize, Deserialize, Debug)]
-pub struct RequestBody {
+pub struct TokenRequest {
     pub session_token: String,
     pub account_id: u32,
+}
+
+pub struct SessionToken {
+    pub account_id: i32,
+    pub token: String,
+    pub expiray_date: DateTime<Utc>,
+}
+
+// Generate a unique Hash session token based off the account requesting
+// the token, and the time it was requested. Helps keep the tokens unique
+// even if multiple requests from the same account or same time happen
+pub fn generate_session_token(account: &Account) -> SessionToken {
+    let timestamp_millis = Utc::now().timestamp_millis().to_string();
+    let email = &account.email;
+    let id = account.id.to_string();
+
+    let mut hasher = Sha256::new();
+    hasher.input_str(format!("{}{}{}", timestamp_millis, email, id).as_str());
+
+    SessionToken {
+        account_id: account.id,
+        token: hasher.result_str(),
+        expiray_date: Utc::now().add(Days::new(180))
+    }
+}
+
+#[cfg(test)]
+mod tests {
+    use crate::db::Account;
+    use hex;
+
+    #[tokio::test]
+    async fn test_generate_session_token_expected_input_correct_token() {
+        let mut test_account = Account::default();
+        test_account.email = "testEmailAddress@gmail.com".to_string();
+        test_account.hashed_password = "test_password+1".to_string();
+
+        let token_result = super::generate_session_token(&test_account);
+        let hex_result = hex::decode(&token_result.token); // if this fails then its an invalid hex string
+        // and concequently an invalid sha256
+
+        assert!(!hex_result.is_err());
+        let hex_str = hex_result.unwrap();
+        assert_eq!(hex_str.len(), 32);
+    }
 }

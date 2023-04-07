@@ -1,5 +1,4 @@
 mod endpoints;
-mod sps;
 mod db;
 
 // Any errors croping up on the next 3 lines can just be ignored
@@ -46,10 +45,10 @@ fn rocket() -> _ {
     rocket::build()
         .mount("/", routes![
             endpoints::index,
-            endpoints::auth_credentials,
-            endpoints::auth_session,
-            endpoints::auth_forgot,
-            endpoints::auth_otp
+            endpoints::auth::auth_credentials,
+            endpoints::auth::auth_session,
+            endpoints::auth::auth_forgot,
+            endpoints::auth::auth_otp
         ])
         .attach(db::SPS::init())
 }
