@@ -2,8 +2,8 @@
 //! All endpoint urls will begin with /authentication/
 
 mod credentials;
-pub mod otp;
-pub mod session_token;
+mod otp;
+mod session_token;
 
 use rocket::serde::json::Json;
 use rocket_db_pools::{
