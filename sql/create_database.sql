@@ -30,8 +30,7 @@ CREATE TABLE tblSessionToken (
 );
 
 CREATE TABLE tblNotes (
-  notes_id INT PRIMARY KEY AUTO_INCREMENT,
-  note_id INT NOT NULL,
+  note_id INT PRIMARY KEY AUTO_INCREMENT,
   account_id INT NOT NULL,
   title VARCHAR(255) NOT NULL,
   content TEXT,
@@ -75,12 +74,5 @@ CREATE TABLE tblAssignedRotations (
   rotation_id INT NOT NULL,
   account_id INT NOT NULL,
   FOREIGN KEY (rotation_id) REFERENCES tblRotation(rotation_id),
-  FOREIGN KEY (account_id) REFERENCES tblAccount(account_id)
-);
-
-CREATE TABLE tblOTP(
-  otp_id INT PRIMARY KEY NOT NULL,
-  account_id INT NOT NULL,
-  opt_num VARCHAR(8) NOT NULL,
   FOREIGN KEY (account_id) REFERENCES tblAccount(account_id)
 );
