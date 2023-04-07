@@ -2,7 +2,7 @@
 //! All endpoint urls will begin with /authentication/
 
 mod credentials;
-mod otp;
+mod security_questions;
 mod session_token;
 
 use rocket::serde::json::Json;
@@ -14,6 +14,25 @@ use regex::Regex;
 
 use crate::endpoints::errors::{ApiResult, ApiErrors};
 use crate::db::{self, SPS};
+
+/// ## Validate email address
+///
+/// Checks whether or not a given email address is a valid student
+/// email address.
+fn validate_email(email: &String) -> ApiResult<()> {
+    // Regex setup and error handling
+    let email_rule_regex = match Regex::new(r"^[0-9]{7}@students.wits.ac.za$") {
+        Ok(val) => val,
+        Err(e) => return Err(ApiErrors::InternalError(format!("Internal Server Ererrorsror: {}", e)))
+    };
+
+    // Ensure that the received email address is a student account
+    if !email_rule_regex.is_match(&email) {
+        return Err(ApiErrors::Unauth("Invalid email address provided".to_string()));
+    }
+
+    Ok(())
+}
 
 /// ## Authenticate User Credentials
 ///
@@ -32,16 +51,8 @@ use crate::db::{self, SPS};
 /// * 401 Unauthorized
 #[post("/authentication/credentials", data = "<credentials>")]
 pub async fn auth_credentials(mut db_conn: Connection<SPS>, credentials: Json<credentials::CredentialRequest>) -> ApiResult<Json<credentials::CredentialReponse>> {
-    // Regex setup and error handling
-    let email_rule_regex = match Regex::new(r"^[0-9]{7}@students.wits.ac.za$") {
-        Ok(val) => val,
-        Err(e) => return Err(ApiErrors::InternalError(format!("Internal Server Ererrorsror: {}", e)))
-    };
 
-    // Ensure that the received email address is a student account
-    if !email_rule_regex.is_match(&credentials.email) {
-        return Err(ApiErrors::Unauth("Invalid email address provided".to_string()));
-    }
+    validate_email(&credentials.email)?;
 
     let mut is_new_account = false;
     let db_account = match sqlx::query_as!(
@@ -97,29 +108,36 @@ pub async fn auth_credentials(mut db_conn: Connection<SPS>, credentials: Json<cr
 ///
 /// * 200 Ok
 /// * 404 Not Found
-#[post("/authentication/forgot", data = "<forgot>")]
-pub async fn auth_forgot(forgot: Json<otp::ForgotRequest>) -> ApiResult<Json<otp::ForgotResponse>> {
-    todo!()
-}
+#[post("/authentication/security_questions", data = "<reset_details>")]
+pub async fn auth_security_questions(mut db_conn: Connection<SPS>, reset_details: Json<security_questions::SecurityQuestionsRequest>) -> ApiResult<Json<security_questions::SecurityQuestionsResponse>> {
 
-/// ## Authenticate OTP for resetting password
-///
-/// ### Arguments
-/// ```json
-///     {
-///         "account_id": int,
-///         "otp": string
-///     }
-/// ```
-///
-/// ### Possible Responses
-///
-/// * 200 Ok
-/// * 401 Unauthorized
-/// * 404 Not Found
-#[post("/authentication/otp", data = "<otp>")]
-pub async fn auth_otp(otp: Json<otp::OTPRequest>) -> ApiResult<()> {
-    todo!()
+    validate_email(&reset_details.email)?;
+
+    let account_questions = match sqlx::query!(
+        "SELECT tblAccount.email as email, tblAccount.account_id as account_id, tblSecurityAnswers.secques_id as question_id, tblSecurityQuestions.question as question, tblSecurityAnswers.answer as answer FROM tblSecurityAnswers JOIN tblAccount ON tblAccount.account_id = tblSecurityAnswers.account_id JOIN tblSecurityQuestions ON tblSecurityAnswers.secques_id = tblSecurityQuestions.secques_id WHERE tblAccount.email = ?",
+        &reset_details.email
+    ).fetch_all(&mut *db_conn).await {
+        Ok(val) => val,
+        Err(_) => return Err(ApiErrors::InternalError("Failed to query database".to_string()))
+    };
+
+    match account_questions.len() == 0 {
+        true => return Err(ApiErrors::NotFound("Provided email address not found in database".to_string())),
+        _ => ()
+    }
+
+    let mut sq_response = security_questions::SecurityQuestionsResponse::default();
+
+    for question in &account_questions {
+        sq_response.account_id = question.account_id;
+        sq_response.questions.push(security_questions::SecurityQuestion {
+            question_id: question.question_id,
+            question: question.question.to_owned(),
+            answer: question.answer.to_owned()
+        })
+    }
+
+    Ok(Json(sq_response))
 }
 
 /// ## Authenticate a session token
