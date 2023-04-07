@@ -1,7 +1,6 @@
 CREATE DATABASE Apollonius;
 USE Apollonius;
 
-
 CREATE TABLE tblAccount (
   account_id INT PRIMARY KEY AUTO_INCREMENT,
   email VARCHAR(255) NOT NULL,
@@ -75,4 +74,18 @@ CREATE TABLE tblAssignedRotations (
   account_id INT NOT NULL,
   FOREIGN KEY (rotation_id) REFERENCES tblRotation(rotation_id),
   FOREIGN KEY (account_id) REFERENCES tblAccount(account_id)
+);
+
+CREATE TABLE tblSecurityQuestions (
+    secques_id INT PRIMARY KEY AUTO_INCREMENT,
+    question VARCHAR(255) NOT NULL
+);
+
+CREATE TABLE tblSecurityAnswers (
+    secans_id INT PRIMARY KEY AUTO_INCREMENT,
+    secques_id INT NOT NULL,
+    account_id INT NOT NULL,
+    answer VARCHAR(255) NOT NULL,
+    FOREIGN KEY (secques_id) REFERENCES tblSecurityQuestions(secques_id),
+    FOREIGN KEY (account_id) REFERENCES tblAccount(account_id)
 );
