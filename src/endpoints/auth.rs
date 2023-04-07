@@ -78,7 +78,7 @@ pub async fn auth_credentials(mut db_conn: Connection<SPS>, credentials: Json<cr
     let token = session_token::generate_session_token(&db_account).token;
     Ok(Json(credentials::CredentialReponse {
         session_token: token,
-        account_id: db_account.id,
+        account_id: db_account.account_id,
         new_account: is_new_account
     }))
 }
