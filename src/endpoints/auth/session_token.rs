@@ -1,8 +1,6 @@
 use serde::{Deserialize, Serialize};
 use crypto::{ sha2::Sha256, digest::Digest };
-use chrono::{ prelude::*, naive::Days };
-use std::ops::Add;
-
+use chrono::Utc;
 use crate::db::Account;
 
 #[derive(Serialize, Deserialize, Debug)]
@@ -13,8 +11,9 @@ pub struct TokenRequest {
 
 pub struct SessionToken {
     pub account_id: i32,
+    pub session_token_id: i32,
     pub token: String,
-    pub expiray_date: DateTime<Utc>,
+    pub expiry_date: time::Date
 }
 
 // Generate a unique Hash session token based off the account requesting
@@ -28,10 +27,13 @@ pub fn generate_session_token(account: &Account) -> SessionToken {
     let mut hasher = Sha256::new();
     hasher.input_str(format!("{}{}{}", timestamp_millis, email, id).as_str());
 
+    let expiry_date = time::OffsetDateTime::now_utc() + time::Duration::days(180);
+
     SessionToken {
+        session_token_id: 0,
         account_id: account.account_id,
         token: hasher.result_str(),
-        expiray_date: Utc::now().add(Days::new(180))
+        expiry_date: expiry_date.date()
     }
 }
 

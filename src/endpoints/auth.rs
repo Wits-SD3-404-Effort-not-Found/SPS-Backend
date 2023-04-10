@@ -14,6 +14,7 @@ use rocket_db_pools::{
     sqlx
 };
 use regex::Regex;
+use chrono::DateTime;
 
 use crate::endpoints::errors::{ApiResult, ApiErrors};
 use crate::db::{self, SPS};
@@ -159,6 +160,15 @@ pub async fn auth_security_questions(mut db_conn: Connection<SPS>, reset_details
 /// * 401 Unauthorized
 /// * 404 Not Found
 #[post("/authentication/session", data = "<token>")]
-pub async fn auth_session(token: Json<session_token::TokenRequest>) -> ApiResult<()> {
-    todo!()
+pub async fn auth_session(mut db_conn: Connection<SPS>, token: Json<session_token::TokenRequest>) -> ApiResult<()> {
+    
+    match sqlx::query_as!(
+        session_token::SessionToken,
+        "SELECT * FROM tblSessionToken WHERE account_id = ? AND token = ?",
+        token.account_id, token.session_token
+    ).fetch_one(&mut *db_conn).await {
+        Ok(_) => return Ok(()),
+        Err(_) => return Err(ApiErrors::Unauth("Session Token not found".to_string()))
+    }
+ 
 }
