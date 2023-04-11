@@ -2,6 +2,8 @@ use rocket_db_pools::Database;
 use rocket_db_pools::sqlx;
 use serde::Serialize;
 
+use time::DateTime;
+
 // Rocket DB integration setup 
 #[derive(Database)]
 #[database("sps_mysql")]
@@ -19,6 +21,29 @@ pub struct Account {
     pub username: String,
     pub cell_number: Option<String>,
     pub profile_photo: Option<Vec<u8>>
+}
+
+/// SQL Table schema for tblEvents
+pub struct Event {
+    pub account_id: i32,
+    pub event_id: i32,
+    pub start_date: Datetime,
+    pub end_date: Datetime,
+    pub name: String,
+    pub description: String
+}
+
+/// SQL Table schema for tblRotations
+pub struct Rotation {
+    pub account_id: i32,
+    pub event_id: i32,
+    pub rotation_id: i32,
+    pub start_date: Datetime,
+    pub end_date: Datetime,
+    pub name: String,
+    pub description: String,
+    pub hospital_name: String,
+    pub dicipline_name: String,
 }
 
 #[derive(Debug, Default, Serialize)]
