@@ -25,3 +25,8 @@ INSERT INTO tblSecurityAnswers (secques_id, account_id, answer) VALUES
 (4, 2, '1584ecc2592eccae2314eaa81e61cf4ab9674f7508d77c3bd8acebff52acdb53'), /*play videogames*/
 (5, 3, '0b4f17f89076d53c785b72e1ac4c0da8abc1e33ec6215e6806efc1f97696ce09'), /*edenvale high school*/
 (1, 3, '730551f5bad4af0604f661e7f8b82e6a6c364ca19ce140166333d86cdc814ca6'); /*snowball*/
+
+INSERT INTO tblProtocol (title, content) VALUES
+('HHHH', 'Hazard - Identify any hazards that can cause harm to both you and the casulty.\nHello - Introduce yourself yourself to the casualty, and ask for consent to administer treatment.\nHistory - Ask the casualty what happened.\nHelp - call emergency services if necessary, else administer first aid.'),
+('ABC', 'Airway - Check that the casualtys airway is unblocked.\nBreathing - Check that the casualty is breathing.\nCirculation - Check that the casulty has circulation with a capillary pinch test, or by measuring their pulse.\nIf any of these fail, administer CPR immediately'),
+('CPR', '1. Lean the casultys head back, with their mouth open.\n2. Perform 30 chest compressions at 100 beats per minute, or to the beat of Stayin Alive by the Bee Gees on the casultys solar plexus / end of their sternum.\n3. After 30 compressions, administer 2 breaths to the casulty.\n4.Repeat until emergency services arrive!');

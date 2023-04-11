@@ -1,5 +1,6 @@
 pub mod auth;
 pub mod account;
+pub mod notes;
 mod errors;
 
 use rocket_db_pools::sqlx::{self, Row};

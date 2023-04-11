@@ -49,6 +49,7 @@ fn rocket() -> _ {
             endpoints::auth::auth_session,
             endpoints::auth::auth_security_questions,
             endpoints::account::account_reset_password,
+            endpoints::notes::fetch_protocols,
         ])
         .attach(db::SPS::init())
 }
