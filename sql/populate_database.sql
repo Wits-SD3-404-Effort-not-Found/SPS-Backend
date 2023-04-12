@@ -30,3 +30,25 @@ INSERT INTO tblProtocol (title, content) VALUES
 ('HHHH', 'Hazard - Identify any hazards that can cause harm to both you and the casulty.\nHello - Introduce yourself yourself to the casualty, and ask for consent to administer treatment.\nHistory - Ask the casualty what happened.\nHelp - call emergency services if necessary, else administer first aid.'),
 ('ABC', 'Airway - Check that the casualtys airway is unblocked.\nBreathing - Check that the casualty is breathing.\nCirculation - Check that the casulty has circulation with a capillary pinch test, or by measuring their pulse.\nIf any of these fail, administer CPR immediately'),
 ('CPR', '1. Lean the casultys head back, with their mouth open.\n2. Perform 30 chest compressions at 100 beats per minute, or to the beat of Stayin Alive by the Bee Gees on the casultys solar plexus / end of their sternum.\n3. After 30 compressions, administer 2 breaths to the casulty.\n4.Repeat until emergency services arrive!');
+
+INSERT INTO tblNotes (account_id, url) VALUES
+(1, 'ABCDEFG'),
+(1, 'ABCDEFG'),
+(2, 'ABCDEFG'),
+(2, 'ABCDEFG'),
+(3, 'ABCDEFG'),
+(3, 'ABCDEFG'),
+(4, 'ABCDEFG'),
+(4, 'ABCDEFG'),
+(5, 'ABCDEFG'),
+(5, 'ABCDEFG'),
+(6, 'ABCDEFG'),
+(6, 'ABCDEFG'),
+(7, 'ABCDEFG'),
+(7, 'ABCDEFG'),
+(8, 'ABCDEFG'),
+(8, 'ABCDEFG'),
+(9, 'ABCDEFG'),
+(9, 'ABCDEFG'),
+(10, 'ABCDEFG'),
+(10, 'ABCDEFG');

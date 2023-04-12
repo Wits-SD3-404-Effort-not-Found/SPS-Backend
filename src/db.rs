@@ -27,3 +27,10 @@ pub struct Protocol {
     pub title: String,
     pub content: Option<String>,
 }
+
+/// SQL Table schema for tblNotes
+pub struct Note {
+    pub note_id: i32,
+    pub account_id: i32,
+    pub url: String
+}
