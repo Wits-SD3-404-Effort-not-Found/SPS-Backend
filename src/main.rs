@@ -6,6 +6,7 @@ mod db;
 extern crate rocket;
 extern crate lazy_static;
 
+use rocket::fs::FileServer;
 use simple_logger::SimpleLogger;
 use systemd_journal_logger::{
     connected_to_journal,
@@ -42,7 +43,7 @@ pub mod tests {
 
 #[cfg(not(tarpaulin_include))]
 #[launch]
-fn rocket() -> _ {
+async fn rocket() -> _ {
 
     // If the systemd service is setup, write to the journal
     if connected_to_journal() {
@@ -52,6 +53,23 @@ fn rocket() -> _ {
         match SimpleLogger::new().init() {
             Err(e) => println!("Logger Error: {e}"),
             _ => ()
+        }
+    }
+
+    let settings = SETTINGS.read().await;
+    let static_dir = match settings.get::<String>("static_file_directory") {
+        Ok(val) => val,
+        Err(e) => { 
+            log::error!("Cannot read static file directory config option {}", e);
+            panic!(); // Panic because not actually sure what I can put here because of rocket
+        }
+    };
+
+    match tokio::fs::create_dir_all(&static_dir).await {
+        Ok(_) => log::info!("Successfully created static file directory"),
+        Err(e) => {
+            log::error!("Cannot create static file directory {}", e);
+            panic!(); // Not sure how to exit program with rocket. Needs to be fixed later
         }
     }
 
@@ -65,6 +83,8 @@ fn rocket() -> _ {
             endpoints::account::account_reset_password,
             endpoints::notes::fetch_protocols,
             endpoints::notes::fetch_notes,
+            endpoints::notes::add_note,
         ])
+        .mount("/static", FileServer::from(static_dir))
         .attach(db::SPS::init())
 }
