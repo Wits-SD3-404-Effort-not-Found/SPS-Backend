@@ -84,6 +84,7 @@ async fn rocket() -> _ {
             endpoints::notes::fetch_protocols,
             endpoints::notes::fetch_notes,
             endpoints::notes::add_note,
+            endpoints::notes::remove_note,
         ])
         .mount("/static", FileServer::from(static_dir))
         .attach(db::SPS::init())
