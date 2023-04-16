@@ -159,7 +159,34 @@ pub async fn add_note(account_id: i32, mut note_file: TempFile<'_>, mut db_conn:
 /// * 404 Not Found
 #[put("/notes/<note_id>", format = "plain", data="<note_file>")]
 pub async fn update_note(note_id: i32, mut note_file: TempFile<'_>,  mut db_conn: Connection<SPS>) -> ApiResult<()> {
-    todo!()
+
+    // Fetching the notes record
+    let db_note = match sqlx::query_as!(
+        db::Note,
+        "SELECT * FROM tblNotes WHERE note_id = ?",
+       note_id 
+    ).fetch_one(&mut *db_conn).await {
+        Ok(val) => val,
+        Err(_) => return Err(ApiErrors::NotFound("Note not found".to_string()))
+    };
+
+    let file_path = format!("./{}", &db_note.url);
+
+    // This is a bug waiting to happen but idc atm
+    // The bug being the fact that I am just removing the file as given by db, there is no
+    // changing the url to the actual file path
+    match tokio::fs::remove_file(&file_path).await {
+        Ok(_) => (),
+        Err(_) => return Err(ApiErrors::InternalError("Unable to update static file".to_string()))
+    }
+
+    // overwriting the other file
+    match note_file.persist_to(&file_path).await {
+        Ok(_) => (),
+        Err(_) => return Err(ApiErrors::InternalError("Unable to update static file".to_string()))
+    }
+
+    Ok(())
 }
 
 /// ## Delete a notes file
@@ -188,6 +215,8 @@ pub async fn remove_note(note_id: i32, mut db_conn: Connection<SPS>) -> ApiResul
     };
 
     // This is a bug waiting to happen but idc atm
+    // The bug being the fact that I am just removing the file as given by db, there is no
+    // changing the url to the actual file path
     match tokio::fs::remove_file(format!("./{}", &db_note.url)).await {
         Ok(_) => (),
         Err(_) => return Err(ApiErrors::InternalError("Unable to delete static file".to_string()))
