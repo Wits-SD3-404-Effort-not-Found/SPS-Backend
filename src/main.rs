@@ -40,6 +40,7 @@ pub mod tests {
     }
 }
 
+#[cfg(not(tarpaulin_include))]
 #[launch]
 fn rocket() -> _ {
 
