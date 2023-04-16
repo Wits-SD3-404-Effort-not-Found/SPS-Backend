@@ -27,6 +27,19 @@ lazy_static! {
     );
 }
 
+#[cfg(test)]
+pub mod tests {
+    use rocket::local::blocking::Client;
+    use tokio::sync::Mutex;
+    use lazy_static::lazy_static;
+
+    lazy_static! {
+        pub static ref CLIENT: Mutex<Client> = Mutex::new(
+            Client::tracked(super::rocket()).expect("valid rocket instance")
+        );
+    }
+}
+
 #[launch]
 fn rocket() -> _ {
 
