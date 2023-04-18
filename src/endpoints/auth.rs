@@ -1,6 +1,9 @@
 //! # Authentication Endpoints
 //! All endpoint urls will begin with /authentication/
 
+#[cfg(test)]
+mod tests;
+
 mod credentials;
 mod security_questions;
 mod session_token;
