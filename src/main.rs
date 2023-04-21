@@ -16,6 +16,7 @@ use config::Config;
 use lazy_static::lazy_static;
 use tokio::sync::RwLock;
 use rocket_db_pools::Database;
+use futures::executor::block_on;
 
 // Add all our settings to a global variable
 // RwLock - https://docs.rs/tokio/1.26.0/tokio/sync/struct.RwLock.html
@@ -31,7 +32,7 @@ lazy_static! {
 #[cfg(test)]
 pub mod tests {
     use rocket::local::blocking::Client;
-    use tokio::sync::Mutex;
+    use std::sync::Mutex;
     use lazy_static::lazy_static;
 
     lazy_static! {
@@ -43,7 +44,7 @@ pub mod tests {
 
 #[cfg(not(tarpaulin_include))]
 #[launch]
-async fn rocket() -> _ {
+fn rocket() -> _ {
 
     // If the systemd service is setup, write to the journal
     if connected_to_journal() {
@@ -56,7 +57,7 @@ async fn rocket() -> _ {
         }
     }
 
-    let settings = SETTINGS.read().await;
+    let settings = block_on(SETTINGS.read());
     let static_dir = match settings.get::<String>("static_file_directory") {
         Ok(val) => val,
         Err(e) => { 
@@ -65,7 +66,7 @@ async fn rocket() -> _ {
         }
     };
 
-    match tokio::fs::create_dir_all(&static_dir).await {
+    match std::fs::create_dir_all(&static_dir) {
         Ok(_) => log::info!("Successfully created static file directory"),
         Err(e) => {
             log::error!("Cannot create static file directory {}", e);

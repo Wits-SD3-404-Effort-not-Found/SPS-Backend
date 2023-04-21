@@ -100,7 +100,6 @@ pub async fn fetch_notes(account_id: i32, mut db_conn: Connection<SPS>) -> ApiRe
 /// * 404 Not Found
 #[post("/notes/<account_id>", format = "plain", data = "<note_file>")]
 pub async fn add_note(account_id: i32, mut note_file: TempFile<'_>, mut db_conn: Connection<SPS>) -> ApiResult<()> {
-
     // Checking the user account actually exists
     match sqlx::query!(
         "SELECT account_id FROM tblAccount WHERE account_id = ?",
