@@ -2,3 +2,4 @@
 Rocket.toml
 Cargo.lock
 .env
+/static/

@@ -38,7 +38,7 @@ fn test_validate_email_invalid_email_false() {
 
 #[test]
 fn test_auth_credentials_correct_credentials_ok() {
-    let client_binding = crate::tests::CLIENT.blocking_lock();
+    let client_binding = crate::tests::CLIENT.lock().unwrap();
 
     let valid_body = super::credentials::CredentialRequest {
         email: "2763528@students.wits.ac.za".to_string(),
@@ -55,7 +55,7 @@ fn test_auth_credentials_correct_credentials_ok() {
 
 #[test]
 fn test_auth_credentials_incorrect_credentials_unauth() {
-    let client_binding = crate::tests::CLIENT.blocking_lock();
+    let client_binding = crate::tests::CLIENT.lock().unwrap();
 
     let valid_body = super::credentials::CredentialRequest {
         email: "0000000@gmail.wits.ac.za".to_string(),

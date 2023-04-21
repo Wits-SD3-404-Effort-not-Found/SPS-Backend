@@ -1,1 +1,1 @@
-test_value = "Hello World"
+static_file_directory = "./static/"
