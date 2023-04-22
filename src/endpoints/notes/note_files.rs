@@ -3,18 +3,32 @@ use serde::{Serialize, Deserialize};
 use crate::db;
 
 #[derive(Serialize)]
-pub struct NoteFile {
+pub struct NoteResponse {
     pub note_id: i32,
-    pub note_url: String,
     pub note_title: String,
+    pub note_content: String,
 }
 
-impl From<&db::Note> for NoteFile {
+#[derive(Deserialize)]
+pub struct NewNote {
+    pub account_id: i32,
+    pub note_title: String,
+    pub note_content: String
+}
+
+#[derive(Deserialize)]
+pub struct UpdateNote {
+    pub note_id: i32,
+    pub note_title: String,
+    pub note_content: String,
+}
+
+impl From<&db::Note> for NoteResponse {
     fn from(value: &db::Note) -> Self {
-        NoteFile {
+        NoteResponse {
             note_id: value.note_id,
             note_title: value.title.clone(),
-            note_url: value.url.clone()
+            note_content: value.content.clone()
         }
     }
 }
