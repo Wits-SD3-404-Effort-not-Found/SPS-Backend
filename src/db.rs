@@ -43,7 +43,7 @@ pub struct Rotation {
     pub name: String,
     pub description: String,
     pub hospital_name: String,
-    pub dicipline_name: String,
+    pub discipline_name: String,
 }
 
 #[derive(Debug, Default, Serialize)]
