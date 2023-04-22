@@ -14,7 +14,6 @@ use rocket_db_pools::{
     sqlx
 };
 use regex::Regex;
-use chrono::DateTime;
 
 use crate::endpoints::errors::{ApiResult, ApiErrors};
 use crate::db::{self, SPS};
@@ -162,13 +161,35 @@ pub async fn auth_security_questions(mut db_conn: Connection<SPS>, reset_details
 #[post("/authentication/session", data = "<token>")]
 pub async fn auth_session(mut db_conn: Connection<SPS>, token: Json<session_token::TokenRequest>) -> ApiResult<()> {
     
-    match sqlx::query_as!(
-        session_token::SessionToken,
+    let token = match sqlx::query_as!(
+        db::SessionToken, 
         "SELECT * FROM tblSessionToken WHERE account_id = ? AND token = ?",
         token.account_id, token.session_token
     ).fetch_one(&mut *db_conn).await {
-        Ok(_) => return Ok(()),
+        Ok(val) => val,
         Err(_) => return Err(ApiErrors::Unauth("Session Token not found".to_string()))
-    }
+    };
+
+    // Converting for comparison against the sent value
+    let expiry_datetime = match token.expiry_date.and_hms_opt(0, 0, 0) {
+        Some(val) => val,
+        None => chrono::NaiveDateTime::MIN,
+    };
+    match chrono::Utc::now().naive_utc() > expiry_datetime {
+        true => {
+            match sqlx::query!(
+                "DELETE FROM tblSessionToken WHERE session_token_id = ?",
+                token.session_token_id
+            ).execute(&mut *db_conn).await {
+                Ok(_) => (),
+                Err(_) => return Err(ApiErrors::InternalError("Failed to delete expired session token".to_string()))
+            };
+
+            return Err(ApiErrors::Unauth("Expired Session Token".to_string()));
+        },
+        false => ()
+    };
+
+    Ok(())
  
 }
