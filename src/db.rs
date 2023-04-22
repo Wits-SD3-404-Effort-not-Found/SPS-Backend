@@ -2,7 +2,7 @@ use rocket_db_pools::Database;
 use rocket_db_pools::sqlx;
 use serde::Serialize;
 
-use time::DateTime;
+use chrono::{DateTime, Utc};
 
 // Rocket DB integration setup 
 #[derive(Database)]
@@ -27,10 +27,10 @@ pub struct Account {
 pub struct Event {
     pub account_id: i32,
     pub event_id: i32,
-    pub start_date: Datetime,
-    pub end_date: Datetime,
+    pub start_date: chrono::NaiveDateTime,
+    pub end_date: chrono::NaiveDateTime,
     pub name: String,
-    pub description: String
+    pub description: Option<String>
 }
 
 /// SQL Table schema for tblRotations
@@ -38,8 +38,8 @@ pub struct Rotation {
     pub account_id: i32,
     pub event_id: i32,
     pub rotation_id: i32,
-    pub start_date: Datetime,
-    pub end_date: Datetime,
+    pub start_date: DateTime<Utc>,
+    pub end_date: DateTime<Utc>,
     pub name: String,
     pub description: String,
     pub hospital_name: String,
