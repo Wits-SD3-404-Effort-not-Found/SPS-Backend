@@ -46,6 +46,7 @@ fn rocket() -> _ {
             endpoints::notes::remove_note,
             endpoints::notes::update_note,
             endpoints::events::fetch_events
+            endpoints::events::fetch_events
         ])
         .attach(db::SPS::init())
 }
