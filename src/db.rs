@@ -32,6 +32,6 @@ pub struct Protocol {
 pub struct Note {
     pub note_id: i32,
     pub account_id: i32,
-    pub url: String,
+    pub content: String,
     pub title: String
 }

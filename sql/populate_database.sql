@@ -31,24 +31,14 @@ INSERT INTO tblProtocol (title, content) VALUES
 ('ABC', 'Airway - Check that the casualtys airway is unblocked.\nBreathing - Check that the casualty is breathing.\nCirculation - Check that the casulty has circulation with a capillary pinch test, or by measuring their pulse.\nIf any of these fail, administer CPR immediately'),
 ('CPR', '1. Lean the casultys head back, with their mouth open.\n2. Perform 30 chest compressions at 100 beats per minute, or to the beat of Stayin Alive by the Bee Gees on the casultys solar plexus / end of their sternum.\n3. After 30 compressions, administer 2 breaths to the casulty.\n4.Repeat until emergency services arrive!');
 
-INSERT INTO tblNotes (account_id, url) VALUES
-(1, 'ABCDEFG'),
-(1, 'ABCDEFG'),
-(2, 'ABCDEFG'),
-(2, 'ABCDEFG'),
-(3, 'ABCDEFG'),
-(3, 'ABCDEFG'),
-(4, 'ABCDEFG'),
-(4, 'ABCDEFG'),
-(5, 'ABCDEFG'),
-(5, 'ABCDEFG'),
-(6, 'ABCDEFG'),
-(6, 'ABCDEFG'),
-(7, 'ABCDEFG'),
-(7, 'ABCDEFG'),
-(8, 'ABCDEFG'),
-(8, 'ABCDEFG'),
-(9, 'ABCDEFG'),
-(9, 'ABCDEFG'),
-(10, 'ABCDEFG'),
-(10, 'ABCDEFG');
+INSERT INTO tblNotes (account_id, title, content) VALUES
+(1, 'Lecture Notes', 'Today we covered respiratory physiology. Here are the key points:\n\n* Oxygen and carbon dioxide exchange occurs in the alveoli of the lungs.\n* The respiratory system is controlled by the medulla oblongata in the brainstem.\n* The diaphragm and intercostal muscles are responsible for breathing.\n\n---\n\n'),
+(2, 'Study Group', 'Meeting with classmates to review material for upcoming exam. We covered:\n\n* Endocrine system\n* Renal system\n* Hematology\n\nWe created flashcards to help us memorize key concepts.\n\n---\n\n'),
+(3, 'Patient Rounds', 'Observed a patient with COPD this morning. Here are my observations:\n\n* The patient had difficulty breathing and used a nebulizer to help open their airways.\n* The patient was on supplemental oxygen via nasal cannula.\n* We discussed the importance of smoking cessation and medication adherence with the patient.\n\n---\n\n'),
+(4, 'Medical Ethics', 'Discussed ethical dilemmas in medicine during seminar. We covered:\n\n* Patient autonomy\n* Informed consent\n* End-of-life care\n\nWe debated various scenarios and discussed how to handle ethical dilemmas in practice.\n\n---\n\n'),
+(5, 'Clinical Rotation', 'Started my rotation in the cardiology ward. Here are some interesting cases:\n\n* Patient with atrial fibrillation and heart failure\n* Patient with myocardial infarction\n* Patient with hypertrophic cardiomyopathy\n\nI observed procedures such as angiograms and echocardiograms.\n\n---\n\n'),
+(6, 'Research Paper', 'Working on a paper about the effects of exercise on heart health. My research has shown that:\n\n* Regular exercise can reduce the risk of heart disease.\n* Exercise can improve cardiovascular function and lower blood pressure.\n* Exercise can also have psychological benefits, such as reducing stress and anxiety.\n\n---\n\n'),
+(7, 'Grand Rounds', 'Attended a presentation on rare diseases. Some of the diseases discussed were:\n\n* Marfan syndrome\n* Huntingtons disease\n* Alpha-1 antitrypsin deficiency\n\nWe also discussed the challenges of diagnosing and treating rare diseases.\n\n---\n\n'),
+(8, 'Anatomy Lab', 'Dissected a cadaver to study the musculoskeletal system. We identified and studied the following structures:\n\n* Bones: femur, tibia, fibula, humerus, radius, ulna\n* Joints: hip, knee, ankle, shoulder, elbow, wrist\n* Muscles: quadriceps, hamstrings, biceps, triceps, deltoids\n\n---\n\n'),
+(9, 'Emergency Room', 'Worked in the ER and saw several cases of trauma. Some of the cases were:\n\n* Motor vehicle accident\n* Gunshot wound\n* Fall from height\n\nI assisted with procedures such as intubation, chest tube placement, and wound care.\n\n---\n\n')
+(10, 'Surgery Rotation', 'Started my rotation in the surgical ward. Observed several procedures, including:\n\n* Appendectomy\n* Cholecystectomy\n* Hysterectomy\n\nI also learned about postoperative care and wound management.\n\n---\n\n');
