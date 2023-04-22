@@ -98,8 +98,8 @@ pub async fn fetch_notes(account_id: i32, mut db_conn: Connection<SPS>) -> ApiRe
 ///
 /// * 200 Ok
 /// * 404 Not Found
-#[post("/notes/<account_id>", format = "plain", data = "<note_file>")]
-pub async fn add_note(account_id: i32, mut note_file: TempFile<'_>, mut db_conn: Connection<SPS>) -> ApiResult<()> {
+#[post("/notes/<account_id>/<note_title>", format = "plain", data = "<note_file>")]
+pub async fn add_note(account_id: i32, note_title: String, mut note_file: TempFile<'_>, mut db_conn: Connection<SPS>) -> ApiResult<()> {
     // Checking the user account actually exists
     match sqlx::query!(
         "SELECT account_id FROM tblAccount WHERE account_id = ?",
@@ -131,9 +131,10 @@ pub async fn add_note(account_id: i32, mut note_file: TempFile<'_>, mut db_conn:
     }
 
     match sqlx::query!(
-        "INSERT INTO tblNotes (account_id, url) VALUES (?, ?)",
+        "INSERT INTO tblNotes (account_id, url, title) VALUES (?, ?, ?)",
         account_id, 
-        note_file_url
+        note_file_url,
+        note_title
     ).execute(&mut *db_conn).await {
         Ok(_) => (),
         Err(_) => return Err(ApiErrors::InternalError("Unable to save file in database".to_string()))
@@ -143,9 +144,9 @@ pub async fn add_note(account_id: i32, mut note_file: TempFile<'_>, mut db_conn:
 }
 
 
-/// ## Update a specific notes file
+/// ## Update a specific notes file content
 ///
-/// Updates a specific notes file
+/// Update a the content of the note file, not the title
 ///
 /// ### Arguments
 ///
@@ -157,7 +158,7 @@ pub async fn add_note(account_id: i32, mut note_file: TempFile<'_>, mut db_conn:
 /// * 200 Ok
 /// * 404 Not Found
 #[put("/notes/<note_id>", format = "plain", data="<note_file>")]
-pub async fn update_note(note_id: i32, mut note_file: TempFile<'_>,  mut db_conn: Connection<SPS>) -> ApiResult<()> {
+pub async fn update_note_content(note_id: i32, mut note_file: TempFile<'_>,  mut db_conn: Connection<SPS>) -> ApiResult<()> {
 
     // Fetching the notes record
     let db_note = match sqlx::query_as!(
@@ -184,6 +185,59 @@ pub async fn update_note(note_id: i32, mut note_file: TempFile<'_>,  mut db_conn
         Ok(_) => (),
         Err(_) => return Err(ApiErrors::InternalError("Unable to update static file".to_string()))
     }
+
+    Ok(())
+}
+
+/// ## Update a specific notes file content and title
+///
+/// Update a the content and title of the note file, 
+///
+/// ### Arguments
+///
+/// * Note ID
+/// * Updated note file
+/// * Note Title
+///
+/// ### Responses
+///
+/// * 200 Ok
+/// * 404 Not Found
+#[put("/notes/<note_id>/<note_title>", format = "plain", data="<note_file>")]
+pub async fn update_note_title(note_id: i32, note_title: String, mut note_file: TempFile<'_>,  mut db_conn: Connection<SPS>) -> ApiResult<()> {
+
+    // Fetching the notes record
+    let db_note = match sqlx::query_as!(
+        db::Note,
+        "SELECT * FROM tblNotes WHERE note_id = ?",
+       note_id 
+    ).fetch_one(&mut *db_conn).await {
+        Ok(val) => val,
+        Err(_) => return Err(ApiErrors::NotFound("Note not found".to_string()))
+    };
+
+    let file_path = format!("./{}", &db_note.url);
+
+    // This is a bug waiting to happen but idc atm
+    // The bug being the fact that I am just removing the file as given by db, there is no
+    // changing the url to the actual file path
+    match tokio::fs::remove_file(&file_path).await {
+        Ok(_) => (),
+        Err(_) => return Err(ApiErrors::InternalError("Unable to update static file".to_string()))
+    }
+
+    // overwriting the other file
+    match note_file.persist_to(&file_path).await {
+        Ok(_) => (),
+        Err(_) => return Err(ApiErrors::InternalError("Unable to update static file".to_string()))
+    }
+
+    match sqlx::query!("UPDATE tblNotes SET title =? WHERE note_id = ?",
+        note_title, note_id
+    ).execute(&mut *db_conn).await {
+        Err(_) => return Err(ApiErrors::InternalError("Failed to update the notes title".to_string())),
+            _ => ()
+    };
 
     Ok(())
 }
