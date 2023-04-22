@@ -86,7 +86,8 @@ fn rocket() -> _ {
             endpoints::notes::fetch_notes,
             endpoints::notes::add_note,
             endpoints::notes::remove_note,
-            endpoints::notes::update_note,
+            endpoints::notes::update_note_content,
+            endpoints::notes::update_note_title,
         ])
         .mount("/static", FileServer::from(static_dir))
         .attach(db::SPS::init())
