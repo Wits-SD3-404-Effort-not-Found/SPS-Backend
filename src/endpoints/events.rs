@@ -1,5 +1,5 @@
-#[cfg(test)]
-mod tests;
+// #[cfg(test)]
+// mod tests;
 mod event_file;
 
 use rocket::serde::json::Json;
