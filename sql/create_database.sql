@@ -12,12 +12,12 @@ CREATE TABLE tblAccount (
 
 CREATE TABLE tblHospital (
   hospital_id INT PRIMARY KEY AUTO_INCREMENT,
-  name VARCHAR(255) NOT NULL
+  hospital_name VARCHAR(255) NOT NULL
 );
 
 CREATE TABLE tblDiscipline (
   discipline_id INT PRIMARY KEY AUTO_INCREMENT,
-  name VARCHAR(255) NOT NULL
+  discipline_name VARCHAR(255) NOT NULL
 );
 
 CREATE TABLE tblSessionToken (
@@ -51,29 +51,21 @@ CREATE TABLE tblLogbook (
 CREATE TABLE tblEvents (
   event_id INT PRIMARY KEY AUTO_INCREMENT,
   account_id INT NOT NULL,
-  start_date DATE NOT NULL,
-  end_date DATE NOT NULL,
-  name VARCHAR(255) NOT NULL,
+  start_date DATETIME NOT NULL,
+  end_date DATETIME NOT NULL,
+  event_name VARCHAR(255) NOT NULL,
   description TEXT,
   FOREIGN KEY (account_id) REFERENCES tblAccount(account_id)
 );
 
 CREATE TABLE tblRotation (
   rotation_id INT PRIMARY KEY AUTO_INCREMENT,
-  start_date DATE NOT NULL,
-  end_date DATE NOT NULL,
+  event_id INT NOT NULL,
   hospital_id INT NOT NULL,
   discipline_id INT NOT NULL,
+  FOREIGN KEY (event_id) REFERENCES tblEvents(event_id),
   FOREIGN KEY (hospital_id) REFERENCES tblHospital(hospital_id),
   FOREIGN KEY (discipline_id) REFERENCES tblDiscipline(discipline_id)
-);
-
-CREATE TABLE tblAssignedRotations (
-  assigned_rotation_id INT PRIMARY KEY AUTO_INCREMENT,
-  rotation_id INT NOT NULL,
-  account_id INT NOT NULL,
-  FOREIGN KEY (rotation_id) REFERENCES tblRotation(rotation_id),
-  FOREIGN KEY (account_id) REFERENCES tblAccount(account_id)
 );
 
 CREATE TABLE tblSecurityQuestions (

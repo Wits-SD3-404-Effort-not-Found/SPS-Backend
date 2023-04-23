@@ -58,7 +58,6 @@ pub async fn fetch_protocols(mut db_conn: Connection<SPS>) -> ApiResult<Json<Vec
 /// * 404 Not Found
 #[get("/notes/<account_id>")]
 pub async fn fetch_notes(account_id: i32, mut db_conn: Connection<SPS>) -> ApiResult<Json<Vec<note_files::NoteResponse>>> {
-
     // Checking the user account actually exists
     match sqlx::query!(
         "SELECT account_id FROM tblAccount WHERE account_id = ?",
