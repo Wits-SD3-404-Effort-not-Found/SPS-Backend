@@ -10,7 +10,7 @@ pub struct EventFile {
     pub event_id: i32,
     pub start_date: String,
     pub end_date: String,
-    pub name: String,
+    pub event_name: String,
     pub description: Option<String>
 }
 
@@ -26,7 +26,7 @@ impl From<&db::Event> for EventFile {
             event_id: value.event_id,
             start_date: Utc.from_utc_datetime(&value.start_date).to_string(),
             end_date: Utc.from_utc_datetime(&value.end_date).to_string(),
-            name: value.name.clone(),
+            event_name: value.event_name.clone(),
             description
         }
     }

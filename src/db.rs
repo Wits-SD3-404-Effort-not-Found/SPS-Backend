@@ -29,7 +29,7 @@ pub struct Event {
     pub event_id: i32,
     pub start_date: chrono::NaiveDateTime,
     pub end_date: chrono::NaiveDateTime,
-    pub name: String,
+    pub event_name: String,
     pub description: Option<String>
 }
 
@@ -38,10 +38,12 @@ pub struct Rotation {
     pub account_id: i32,
     pub event_id: i32,
     pub rotation_id: i32,
-    pub start_date: DateTime<Utc>,
-    pub end_date: DateTime<Utc>,
-    pub name: String,
-    pub description: String,
+    pub hospital_id: i32,
+    pub discipline_id: i32,
+    pub start_date: chrono::NaiveDateTime,
+    pub end_date: chrono::NaiveDateTime,
+    pub event_name: String,
+    pub description: Option<String>,
     pub hospital_name: String,
     pub discipline_name: String,
 }

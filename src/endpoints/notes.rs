@@ -27,22 +27,22 @@ use crate::db::{self, SPS};
 ///
 /// * 200 Ok
 /// * 404 Not Found
-// #[get("/notes/protocols")]
-// pub async fn fetch_protocols(mut db_conn: Connection<SPS>) -> ApiResult<Json<Vec<db::Protocol>>> {
-//     let db_protocols = match sqlx::query_as!(
-//         db::Protocol,
-//         "SELECT protocol_id, title, content FROM tblProtocol",
-//     ).fetch_all(&mut *db_conn).await {
-//         Ok(val) => val,
-//         Err(_) => return Err(ApiErrors::InternalError("Failed to fetch protocols".to_string()))
-//     };
+#[get("/notes/protocols")]
+pub async fn fetch_protocols(mut db_conn: Connection<SPS>) -> ApiResult<Json<Vec<db::Protocol>>> {
+    let db_protocols = match sqlx::query_as!(
+        db::Protocol,
+        "SELECT protocol_id, title, content FROM tblProtocol",
+    ).fetch_all(&mut *db_conn).await {
+        Ok(val) => val,
+        Err(_) => return Err(ApiErrors::InternalError("Failed to fetch protocols".to_string()))
+    };
 
-//     if db_protocols.is_empty() {
-//         return Err(ApiErrors::NotFound("No protocols were found".to_string()))
-//     }
+    if db_protocols.is_empty() {
+        return Err(ApiErrors::NotFound("No protocols were found".to_string()))
+    }
 
-//     Ok(Json(db_protocols))
-// }
+    Ok(Json(db_protocols))
+}
 
 /// ## Fetch List of Notes
 ///
@@ -58,29 +58,28 @@ use crate::db::{self, SPS};
 /// * 404 Not Found
 #[get("/notes/<account_id>")]
 pub async fn fetch_notes(account_id: i32, mut db_conn: Connection<SPS>) -> ApiResult<Json<Vec<note_files::NoteResponse>>> {
+    // Checking the user account actually exists
+    match sqlx::query!(
+        "SELECT account_id FROM tblAccount WHERE account_id = ?",
+        account_id
+    ).fetch_one(&mut *db_conn).await {
+        Ok(_) => (),
+        Err(_) => return Err(ApiErrors::NotFound("User account not found".to_string()))
+    }
 
-//     // Checking the user account actually exists
-//     match sqlx::query!(
-//         "SELECT account_id FROM tblAccount WHERE account_id = ?",
-//         account_id
-//     ).fetch_one(&mut *db_conn).await {
-//         Ok(_) => (),
-//         Err(_) => return Err(ApiErrors::NotFound("User account not found".to_string()))
-//     }
-
-//     let db_notes = match sqlx::query_as!(
-//         db::Note,
-//         "SELECT * FROM tblNotes WHERE account_id = ?",
-//         account_id
-//     ).fetch_all(&mut *db_conn).await {
-//         Ok(val) => val,
-//         Err(_) => return Err(ApiErrors::NotFound("No notes where found".to_string()))
-//     };
+    let db_notes = match sqlx::query_as!(
+        db::Note,
+        "SELECT * FROM tblNotes WHERE account_id = ?",
+        account_id
+    ).fetch_all(&mut *db_conn).await {
+        Ok(val) => val,
+        Err(_) => return Err(ApiErrors::NotFound("No notes where found".to_string()))
+    };
 
     let notes: Vec<note_files::NoteResponse> = db_notes.iter().map(|note| note.into()).collect();
 
-//     Ok(Json(notes))
-// }
+    Ok(Json(notes))
+}
 
 /// ## Add a note file to an account 
 ///
@@ -116,8 +115,8 @@ pub async fn add_note(new_note: Json<note_files::NewNote> , mut db_conn: Connect
         Err(_) => return Err(ApiErrors::InternalError("Unable to save file in database".to_string()))
     }
 
-//     Ok(())
-// }
+    Ok(())
+}
 
 
 /// ## Update a specific notes file content
@@ -155,8 +154,8 @@ pub async fn update_note(update_note: Json<note_files::UpdateNote>, mut db_conn:
         Err(_) => return Err(ApiErrors::InternalError("Failed to update the note".to_string())),
     };
 
-//     Ok(())
-// }
+    Ok(())
+}
 
 /// ## Delete a notes file
 ///
@@ -170,8 +169,8 @@ pub async fn update_note(update_note: Json<note_files::UpdateNote>, mut db_conn:
 ///
 /// * 200 Ok
 /// * 404 Not Found
-// #[delete("/notes/<note_id>")]
-// pub async fn remove_note(note_id: i32, mut db_conn: Connection<SPS>) -> ApiResult<()> {
+#[delete("/notes/<note_id>")]
+pub async fn remove_note(note_id: i32, mut db_conn: Connection<SPS>) -> ApiResult<()> {
 
     // Fetching the notes record
     let _db_note = match sqlx::query_as!(
@@ -183,13 +182,13 @@ pub async fn update_note(update_note: Json<note_files::UpdateNote>, mut db_conn:
         Err(_) => return Err(ApiErrors::NotFound("Note not found".to_string()))
     };
 
-//     match sqlx::query!(
-//         "DELETE FROM tblNotes WHERE note_id = ?",
-//         note_id
-//     ).execute(&mut *db_conn).await {
-//         Ok(_) => (),
-//         Err(_) => return Err(ApiErrors::InternalError("Unable to remove file from database".to_string()))
-//     }
+    match sqlx::query!(
+        "DELETE FROM tblNotes WHERE note_id = ?",
+        note_id
+    ).execute(&mut *db_conn).await {
+        Ok(_) => (),
+        Err(_) => return Err(ApiErrors::InternalError("Unable to remove file from database".to_string()))
+    }
 
-//     Ok(())
-// }
+    Ok(())
+}
