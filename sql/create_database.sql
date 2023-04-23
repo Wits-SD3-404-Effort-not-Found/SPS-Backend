@@ -12,12 +12,12 @@ CREATE TABLE tblAccount (
 
 CREATE TABLE tblHospital (
   hospital_id INT PRIMARY KEY AUTO_INCREMENT,
-  name VARCHAR(255) NOT NULL
+  hospital_name VARCHAR(255) NOT NULL
 );
 
 CREATE TABLE tblDiscipline (
   discipline_id INT PRIMARY KEY AUTO_INCREMENT,
-  name VARCHAR(255) NOT NULL
+  discipline_name VARCHAR(255) NOT NULL
 );
 
 CREATE TABLE tblSessionToken (
@@ -51,9 +51,9 @@ CREATE TABLE tblLogbook (
 CREATE TABLE tblEvents (
   event_id INT PRIMARY KEY AUTO_INCREMENT,
   account_id INT NOT NULL,
-  start_date DATE NOT NULL,
-  end_date DATE NOT NULL,
-  name VARCHAR(255) NOT NULL,
+  start_date DATETIME NOT NULL,
+  end_date DATETIME NOT NULL,
+  event_name VARCHAR(255) NOT NULL,
   description TEXT,
   FOREIGN KEY (account_id) REFERENCES tblAccount(account_id)
 );

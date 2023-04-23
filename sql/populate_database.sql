@@ -43,14 +43,14 @@ INSERT INTO tblNotes (account_id, title, content) VALUES
 (9, 'Emergency Room', 'Worked in the ER and saw several cases of trauma. Some of the cases were:\n\n* Motor vehicle accident\n* Gunshot wound\n* Fall from height\n\nI assisted with procedures such as intubation, chest tube placement, and wound care.\n\n---\n\n'),
 (10, 'Surgery Rotation', 'Started my rotation in the surgical ward. Observed several procedures, including:\n\n* Appendectomy\n* Cholecystectomy\n* Hysterectomy\n\nI also learned about postoperative care and wound management.\n\n---\n\n');
 
-INSERT INTO tblHospital (name) VALUES
+INSERT INTO tblHospital (hospital_name) VALUES
 ('St. Marys Hospital'),
 ('Johns Hopkins Hospital'),
 ('Cedars-Sinai Medical Center'),
 ('Mayo Clinic'),
 ('Massachusetts General Hospital');
 
-INSERT INTO tblDiscipline (name)
+INSERT INTO tblDiscipline (discipline_name)
 VALUES
 ('Cardiology'),
 ('Dermatology'),
@@ -58,7 +58,7 @@ VALUES
 ('Gastroenterology'),
 ('Hematology');
 
-INSERT INTO tblEvents (account_id, start_date, end_date, name, description) VALUES 
+INSERT INTO tblEvents (account_id, start_date, end_date, event_name, description) VALUES 
 (1, '2022-01-01', '2022-01-07', 'New Year Event', 'Celebrating the New Year'),
 (1, '2022-02-14', '2022-02-14', 'Valentines Day Event', 'Celebrate love on Valentines Day'),
 (2, '2022-07-04', '2022-07-04', 'Independence Day Event', 'Celebrate Americas Independence Day'),
