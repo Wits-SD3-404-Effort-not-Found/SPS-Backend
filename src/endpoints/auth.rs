@@ -89,9 +89,18 @@ pub async fn auth_credentials(mut db_conn: Connection<SPS>, credentials: Json<cr
         return Err(ApiErrors::Unauth("Incorrect provided password".to_string()))
     }
 
-    let token = session_token::generate_session_token(&db_account).token;
+    let token = session_token::generate_session_token(&db_account);
+
+    match sqlx::query!(
+        "INSERT INTO tblSessionToken (account_id, token, expiry_date) VALUES (?, ?, ?)",
+        token.account_id, token.token, token.expiry_date     
+    ).execute(&mut *db_conn).await {
+        Ok(_) => (),
+        Err(_) => (),
+    }
+
     Ok(Json(credentials::CredentialReponse {
-        session_token: token,
+        session_token: token.token,
         account_id: db_account.account_id,
         new_account: is_new_account
     }))

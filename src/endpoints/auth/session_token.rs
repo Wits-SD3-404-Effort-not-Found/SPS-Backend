@@ -1,6 +1,5 @@
 use serde::{Deserialize, Serialize};
 use crypto::{ sha2::Sha256, digest::Digest };
-use chrono::Utc;
 use crate::db::Account;
 
 #[derive(Serialize, Deserialize, Debug)]
@@ -13,21 +12,21 @@ pub struct SessionToken {
     pub account_id: i32,
     pub session_token_id: i32,
     pub token: String,
-    pub expiry_date: time::Date
+    pub expiry_date: chrono::NaiveDate
 }
 
 // Generate a unique Hash session token based off the account requesting
 // the token, and the time it was requested. Helps keep the tokens unique
 // even if multiple requests from the same account or same time happen
 pub fn generate_session_token(account: &Account) -> SessionToken {
-    let timestamp_millis = Utc::now().timestamp_millis().to_string();
+    let timestamp_millis = chrono::Utc::now().timestamp_millis().to_string();
     let email = &account.email;
     let id = account.account_id.to_string();
 
     let mut hasher = Sha256::new();
     hasher.input_str(format!("{}{}{}", timestamp_millis, email, id).as_str());
 
-    let expiry_date = time::OffsetDateTime::now_utc() + time::Duration::days(180);
+    let expiry_date = chrono::Utc::now().naive_utc() + chrono::Duration::days(180);
 
     SessionToken {
         session_token_id: 0,
