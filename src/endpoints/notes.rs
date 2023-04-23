@@ -176,7 +176,7 @@ pub async fn remove_note(note_id: i32, mut db_conn: Connection<SPS>) -> ApiResul
     let _db_note = match sqlx::query_as!(
         db::Note,
         "SELECT * FROM tblNotes WHERE note_id = ?",
-       note_id 
+        note_id 
     ).fetch_one(&mut *db_conn).await {
         Ok(val) => val,
         Err(_) => return Err(ApiErrors::NotFound("Note not found".to_string()))

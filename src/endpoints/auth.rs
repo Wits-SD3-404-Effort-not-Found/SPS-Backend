@@ -89,9 +89,18 @@ pub async fn auth_credentials(mut db_conn: Connection<SPS>, credentials: Json<cr
         return Err(ApiErrors::Unauth("Incorrect provided password".to_string()))
     }
 
-    let token = session_token::generate_session_token(&db_account).token;
+    let token = session_token::generate_session_token(&db_account);
+
+    match sqlx::query!(
+        "INSERT INTO tblSessionToken (account_id, token, expiry_date) VALUES (?, ?, ?)",
+        token.account_id, token.token, token.expiry_date     
+    ).execute(&mut *db_conn).await {
+        Ok(_) => (),
+        Err(_) => (),
+    }
+
     Ok(Json(credentials::CredentialReponse {
-        session_token: token,
+        session_token: token.token,
         account_id: db_account.account_id,
         new_account: is_new_account
     }))
@@ -159,6 +168,58 @@ pub async fn auth_security_questions(mut db_conn: Connection<SPS>, reset_details
 /// * 401 Unauthorized
 /// * 404 Not Found
 #[post("/authentication/session", data = "<token>")]
-pub async fn auth_session(token: Json<session_token::TokenRequest>) -> ApiResult<()> {
-    todo!()
+pub async fn auth_session(mut db_conn: Connection<SPS>, token: Json<session_token::TokenRequest>) -> ApiResult<()> {
+    
+    let token = match sqlx::query_as!(
+        db::SessionToken, 
+        "SELECT * FROM tblSessionToken WHERE account_id = ? AND token = ?",
+        token.account_id, token.session_token
+    ).fetch_one(&mut *db_conn).await {
+        Ok(val) => val,
+        Err(_) => return Err(ApiErrors::Unauth("Session Token not found".to_string()))
+    };
+
+    // Converting for comparison against the current value
+    let expiry_datetime = match token.expiry_date.and_hms_opt(0, 0, 0) {
+        Some(val) => val,
+        None => chrono::NaiveDateTime::MIN,
+    };
+    match chrono::Utc::now().naive_utc() > expiry_datetime {
+        true => {
+            match sqlx::query!(
+                "DELETE FROM tblSessionToken WHERE session_token_id = ?",
+                token.session_token_id
+            ).execute(&mut *db_conn).await {
+                Ok(_) => (),
+                Err(_) => return Err(ApiErrors::InternalError("Failed to delete expired session token".to_string()))
+            };
+
+            return Err(ApiErrors::Unauth("Expired Session Token".to_string()));
+        },
+        false => ()
+    };
+
+    Ok(())
+ 
+}
+
+#[delete("/authentication/session/<token>")]
+pub async fn remove_session(token: String, mut db_conn: Connection<SPS>) -> ApiResult<()> {
+    let ses_token_id: i32 = match sqlx::query!(
+        "SELECT session_token_id FROM tblSessionToken WHERE token = ?",
+        token 
+    ).fetch_one(&mut *db_conn).await {
+        Ok(val) => val.session_token_id,
+        Err(_) => return Err(ApiErrors::NotFound("Session token not found".to_string()))
+    };
+
+    match sqlx::query!(
+        "DELETE FROM tblSessionToken WHERE session_token_id = ?",
+        ses_token_id
+    ).execute(&mut *db_conn).await {
+        Ok(_) => (),
+        Err(_) => return Err(ApiErrors::InternalError("Unable to remove session token from database".to_string()))
+    };
+
+    Ok(())
 }

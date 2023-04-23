@@ -62,3 +62,10 @@ pub struct Note {
     pub content: String,
     pub title: String
 }
+
+pub struct SessionToken {
+    pub session_token_id: i32,
+    pub account_id: i32,
+    pub token: String,
+    pub expiry_date: chrono::NaiveDate
+}
