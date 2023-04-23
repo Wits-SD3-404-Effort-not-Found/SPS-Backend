@@ -42,3 +42,33 @@ INSERT INTO tblNotes (account_id, title, content) VALUES
 (8, 'Anatomy Lab', 'Dissected a cadaver to study the musculoskeletal system. We identified and studied the following structures:\n\n* Bones: femur, tibia, fibula, humerus, radius, ulna\n* Joints: hip, knee, ankle, shoulder, elbow, wrist\n* Muscles: quadriceps, hamstrings, biceps, triceps, deltoids\n\n---\n\n'),
 (9, 'Emergency Room', 'Worked in the ER and saw several cases of trauma. Some of the cases were:\n\n* Motor vehicle accident\n* Gunshot wound\n* Fall from height\n\nI assisted with procedures such as intubation, chest tube placement, and wound care.\n\n---\n\n')
 (10, 'Surgery Rotation', 'Started my rotation in the surgical ward. Observed several procedures, including:\n\n* Appendectomy\n* Cholecystectomy\n* Hysterectomy\n\nI also learned about postoperative care and wound management.\n\n---\n\n');
+
+INSERT INTO tblHospital (name) VALUES
+('St. Marys Hospital'),
+('Johns Hopkins Hospital'),
+('Cedars-Sinai Medical Center'),
+('Mayo Clinic'),
+('Massachusetts General Hospital');
+
+INSERT INTO tblDiscipline (name)
+VALUES
+('Cardiology'),
+('Dermatology'),
+('Endocrinology'),
+('Gastroenterology'),
+('Hematology');
+
+INSERT INTO tblEvents (account_id, start_date, end_date, name, description) VALUES 
+(1, '2022-01-01', '2022-01-07', 'New Year Event', 'Celebrating the New Year'),
+(1, '2022-02-14', '2022-02-14', 'Valentines Day Event', 'Celebrate love on Valentines Day'),
+(2, '2022-07-04', '2022-07-04', 'Independence Day Event', 'Celebrate Americas Independence Day'),
+(3, '2022-10-31', '2022-10-31', 'Halloween Event', 'Dress up and have fun on Halloween'),
+(4, '2022-12-25', '2022-12-25', 'Christmas Event', 'Celebrate the birth of Jesus Christ');
+
+INSERT INTO tblRotation (event_id, hospital_id, discipline_id)
+VALUES 
+  (1, 1, 1),
+  (1, 2, 2),
+  (2, 3, 5),
+  (3, 2, 1),
+  (4, 5, 4);
