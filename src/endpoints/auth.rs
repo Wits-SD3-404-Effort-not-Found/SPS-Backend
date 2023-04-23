@@ -202,3 +202,24 @@ pub async fn auth_session(mut db_conn: Connection<SPS>, token: Json<session_toke
     Ok(())
  
 }
+
+#[delete("/authentication/session/<token>")]
+pub async fn remove_session(token: String, mut db_conn: Connection<SPS>) -> ApiResult<()> {
+    let ses_token_id: i32 = match sqlx::query!(
+        "SELECT session_token_id FROM tblSessionToken WHERE token = ?",
+        token 
+    ).fetch_one(&mut *db_conn).await {
+        Ok(val) => val.session_token_id,
+        Err(_) => return Err(ApiErrors::NotFound("Session token not found".to_string()))
+    };
+
+    match sqlx::query!(
+        "DELETE FROM tblSessionToken WHERE session_token_id = ?",
+        ses_token_id
+    ).execute(&mut *db_conn).await {
+        Ok(_) => (),
+        Err(_) => return Err(ApiErrors::InternalError("Unable to remove session token from database".to_string()))
+    };
+
+    Ok(())
+}
