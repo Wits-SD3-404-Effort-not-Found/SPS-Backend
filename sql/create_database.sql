@@ -63,7 +63,7 @@ CREATE TABLE tblRotation (
   event_id INT NOT NULL,
   hospital_id INT NOT NULL,
   discipline_id INT NOT NULL,
-  FOREIGN KEY (event_id) REFERENCES tblEvents(event_id)
+  FOREIGN KEY (event_id) REFERENCES tblEvents(event_id),
   FOREIGN KEY (hospital_id) REFERENCES tblHospital(hospital_id),
   FOREIGN KEY (discipline_id) REFERENCES tblDiscipline(discipline_id)
 );
