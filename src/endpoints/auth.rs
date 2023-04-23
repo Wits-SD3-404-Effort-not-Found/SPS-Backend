@@ -179,7 +179,7 @@ pub async fn auth_session(mut db_conn: Connection<SPS>, token: Json<session_toke
         Err(_) => return Err(ApiErrors::Unauth("Session Token not found".to_string()))
     };
 
-    // Converting for comparison against the sent value
+    // Converting for comparison against the current value
     let expiry_datetime = match token.expiry_date.and_hms_opt(0, 0, 0) {
         Some(val) => val,
         None => chrono::NaiveDateTime::MIN,
