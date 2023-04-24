@@ -2,8 +2,6 @@ use rocket_db_pools::Database;
 use rocket_db_pools::sqlx;
 use serde::Serialize;
 
-use chrono::{DateTime, Utc};
-
 // Rocket DB integration setup 
 #[derive(Database)]
 #[database("sps_mysql")]

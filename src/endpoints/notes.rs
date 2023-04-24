@@ -4,7 +4,7 @@
 #[cfg(test)]
 mod tests;
 
-mod note_files;
+mod note_api;
  
 use rocket::serde::json::Json;
 use rocket_db_pools::{
@@ -57,7 +57,7 @@ pub async fn fetch_protocols(mut db_conn: Connection<SPS>) -> ApiResult<Json<Vec
 /// * 200 Ok
 /// * 404 Not Found
 #[get("/notes/<account_id>")]
-pub async fn fetch_notes(account_id: i32, mut db_conn: Connection<SPS>) -> ApiResult<Json<Vec<note_files::NoteResponse>>> {
+pub async fn fetch_notes(account_id: i32, mut db_conn: Connection<SPS>) -> ApiResult<Json<Vec<note_api::NoteResponse>>> {
     // Checking the user account actually exists
     match sqlx::query!(
         "SELECT account_id FROM tblAccount WHERE account_id = ?",
@@ -76,7 +76,7 @@ pub async fn fetch_notes(account_id: i32, mut db_conn: Connection<SPS>) -> ApiRe
         Err(_) => return Err(ApiErrors::NotFound("No notes where found".to_string()))
     };
 
-    let notes: Vec<note_files::NoteResponse> = db_notes.iter().map(|note| note.into()).collect();
+    let notes: Vec<note_api::NoteResponse> = db_notes.iter().map(|note| note.into()).collect();
 
     Ok(Json(notes))
 }
@@ -95,7 +95,7 @@ pub async fn fetch_notes(account_id: i32, mut db_conn: Connection<SPS>) -> ApiRe
 /// * 200 Ok
 /// * 404 Not Found
 #[post("/notes", data = "<new_note>")]
-pub async fn add_note(new_note: Json<note_files::NewNote> , mut db_conn: Connection<SPS>) -> ApiResult<()> {
+pub async fn add_note(new_note: Json<note_api::NewNote> , mut db_conn: Connection<SPS>) -> ApiResult<()> {
     // Checking the user account actually exists
     match sqlx::query!(
         "SELECT account_id FROM tblAccount WHERE account_id = ?",
@@ -133,7 +133,7 @@ pub async fn add_note(new_note: Json<note_files::NewNote> , mut db_conn: Connect
 /// * 200 Ok
 /// * 404 Not Found
 #[put("/notes", data="<update_note>")]
-pub async fn update_note(update_note: Json<note_files::UpdateNote>, mut db_conn: Connection<SPS>) -> ApiResult<()> {
+pub async fn update_note(update_note: Json<note_api::UpdateNote>, mut db_conn: Connection<SPS>) -> ApiResult<()> {
 
     // Fetching the notes record
     let _db_note = match sqlx::query_as!(

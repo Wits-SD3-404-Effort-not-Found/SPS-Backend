@@ -1,6 +1,6 @@
 #[cfg(test)]
 mod tests;
-mod rotation_files;
+mod rotation_api;
 
 use rocket::serde::json::Json;
 use rocket_db_pools::{
@@ -11,8 +11,18 @@ use rocket_db_pools::{
 use crate::endpoints::errors::{ApiResult, ApiErrors};
 use crate::db::{self, SPS};
 
+/// ## Fetch rotations for an account
+///
+/// ### Arguments
+///
+/// * account id
+///
+/// ### Possible Responses
+///
+/// * 200 Ok
+/// * 404 Not Found
 #[get("/rotations/<account_id>")]
-pub async fn fetch_rotations(account_id: i32, mut db_conn: Connection<SPS>) -> ApiResult<Json<Vec<rotation_files::Rotation_Request>>>{
+pub async fn fetch_rotations(account_id: i32, mut db_conn: Connection<SPS>) -> ApiResult<Json<Vec<rotation_api::RotationResponse>>>{
 
     // Checking the user account actually exists
     match sqlx::query!(
@@ -32,7 +42,7 @@ pub async fn fetch_rotations(account_id: i32, mut db_conn: Connection<SPS>) -> A
         Err(_) => return Err(ApiErrors::NotFound("No rotations where found".to_string()))
     };
 
-    let rotations: Vec<rotation_files::Rotation_Request> = db_rotations.iter().map(|rotation| rotation.into()).collect();
+    let rotations: Vec<rotation_api::RotationResponse> = db_rotations.iter().map(|rotation| rotation.into()).collect();
 
     Ok(Json(rotations))
 }
