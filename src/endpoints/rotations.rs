@@ -12,7 +12,7 @@ use crate::endpoints::errors::{ApiResult, ApiErrors};
 use crate::db::{self, SPS};
 
 #[get("/rotations/<account_id>")]
-pub async fn fetch_rotations(account_id: i32, mut db_conn: Connection<SPS>) -> ApiResult<Json<Vec<rotation_files::Rotation_Request>>>{
+pub async fn fetch_rotations(account_id: i32, mut db_conn: Connection<SPS>) -> ApiResult<Json<Vec<rotation_files::RotationResponse>>>{
 
     // Checking the user account actually exists
     match sqlx::query!(
@@ -32,7 +32,7 @@ pub async fn fetch_rotations(account_id: i32, mut db_conn: Connection<SPS>) -> A
         Err(_) => return Err(ApiErrors::NotFound("No rotations where found".to_string()))
     };
 
-    let rotations: Vec<rotation_files::Rotation_Request> = db_rotations.iter().map(|rotation| rotation.into()).collect();
+    let rotations: Vec<rotation_files::RotationResponse> = db_rotations.iter().map(|rotation| rotation.into()).collect();
 
     Ok(Json(rotations))
 }

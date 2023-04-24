@@ -1,11 +1,10 @@
 use serde::{Serialize, Deserialize};
-use time::Date;
 
 use crate::db;
-use chrono::{DateTime, Utc, NaiveDateTime, TimeZone};
+use chrono::{Utc, TimeZone};
 
-#[derive(Serialize)]
-pub struct Rotation_Request {
+#[derive(Serialize, Deserialize)]
+pub struct RotationResponse {
     pub account_id: i32,
     pub event_id: i32,
     pub rotation_id: i32,
@@ -17,7 +16,7 @@ pub struct Rotation_Request {
     pub discipline_name: String
 }
 
-impl From<&db::Rotation> for Rotation_Request {
+impl From<&db::Rotation> for RotationResponse {
     fn from(value: &db::Rotation) -> Self {
         
         let description = match &value.description{
@@ -25,7 +24,7 @@ impl From<&db::Rotation> for Rotation_Request {
             None => None
         };
 
-        Rotation_Request {
+        RotationResponse{
             account_id: value.account_id,
             event_id: value.event_id,
             rotation_id: value.rotation_id,

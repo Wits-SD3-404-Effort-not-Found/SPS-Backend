@@ -1,10 +1,9 @@
 use serde::{Serialize, Deserialize};
-use time::Date;
 
 use crate::db;
-use chrono::{DateTime, Utc, NaiveDateTime, TimeZone};
+use chrono::{Utc, TimeZone};
 
-#[derive(Serialize)]
+#[derive(Serialize, Deserialize)]
 pub struct EventFile {
     pub account_id: i32,
     pub event_id: i32,
