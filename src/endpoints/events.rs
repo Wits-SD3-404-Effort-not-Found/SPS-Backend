@@ -11,6 +11,16 @@ use rocket_db_pools::{
 use crate::endpoints::errors::{ApiResult, ApiErrors};
 use crate::db::{self, SPS};
 
+/// ## Fetch events for an account
+///
+/// ### Arguments
+///
+/// * account id
+///
+/// ### Possible Response
+///
+/// * 200 Ok
+/// * 404 Not Found
 #[get("/events/<account_id>")]
 pub async fn fetch_events(account_id: i32, mut db_conn: Connection<SPS>) -> ApiResult<Json<Vec<event_api::EventFile>>>{
 
