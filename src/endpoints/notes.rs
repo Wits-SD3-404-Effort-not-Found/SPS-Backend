@@ -80,7 +80,7 @@ pub async fn fetch_notes(account_id: i32, mut db_conn: Connection<SPS>) -> ApiRe
         return Err(ApiErrors::NotFound("No notes were found".to_string()))
     }
 
-    let notes: Vec<note_files::NoteResponse> = db_notes.iter().map(|note| note.into()).collect();
+    let notes: Vec<note_api::NoteResponse> = db_notes.iter().map(|note| note.into()).collect();
 
     Ok(Json(notes))
 }

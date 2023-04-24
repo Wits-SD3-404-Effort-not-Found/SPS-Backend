@@ -16,7 +16,7 @@ pub struct NewNote {
     pub note_content: String
 }
 
-#[derive(Deserialize)]
+#[derive(Serialize, Deserialize)]
 pub struct UpdateNote {
     pub note_id: i32,
     pub note_title: String,
