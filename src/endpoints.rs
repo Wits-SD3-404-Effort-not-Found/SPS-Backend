@@ -28,14 +28,15 @@ pub async fn index(mut db: Connection<SPS>) -> &'static str {
 #[cfg(test)]
 mod tests {
 
-    use rocket::local::blocking::Client;
     use rocket::http::Status;
+    
+    use crate::tests::CLIENT;
     
     #[test]
     fn test_index_none_ok() {
-        let client = Client::tracked(crate::rocket()).expect("valid rocket instance");
+        let client_binding = CLIENT.lock().unwrap();
 
-        let response = client.get(uri!(super::index)).dispatch();
+        let response = client_binding.get(uri!(super::index)).dispatch();
         assert_eq!(response.status(), Status::Ok);
         assert!(response.body().is_some());
     }

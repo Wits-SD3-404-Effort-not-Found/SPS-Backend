@@ -9,7 +9,7 @@ pub struct NoteResponse {
     pub note_content: String,
 }
 
-#[derive(Deserialize)]
+#[derive(Serialize, Deserialize)]
 pub struct NewNote {
     pub account_id: i32,
     pub note_title: String,
