@@ -27,10 +27,11 @@ fn test_update_account_existing_account_ok() {
         account_id: 1,
         username: "Test Username".to_string(),
         cell_number: "0715791902".to_string(),
-        profile_photo: vec![0, 0, 0, 0, 0, 0, 0, 0, 0]
+        profile_photo: vec![0, 0, 0, 0, 0, 0, 0, 0, 0],
     };
 
-    let response = client_binding.put(uri!(super::update_account))
+    let response = client_binding
+        .put(uri!(super::update_account))
         .body(serde_json::to_string(&req_body).unwrap())
         .dispatch();
 
@@ -46,10 +47,11 @@ fn test_update_account_nonexisting_account_not_found() {
         account_id: 0,
         username: "Test Username".to_string(),
         cell_number: "0715791902".to_string(),
-        profile_photo: vec![0, 0, 0, 0, 0, 0, 0, 0, 0]
+        profile_photo: vec![0, 0, 0, 0, 0, 0, 0, 0, 0],
     };
 
-    let response = client_binding.put(uri!(super::update_account))
+    let response = client_binding
+        .put(uri!(super::update_account))
         .body(serde_json::to_string(&req_body).unwrap())
         .dispatch();
 

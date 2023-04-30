@@ -1,4 +1,4 @@
-use serde::{Serialize, Deserialize};
+use serde::{Deserialize, Serialize};
 
 use crate::endpoints::account::security_question::SecurityQuestion;
 
@@ -6,6 +6,5 @@ use crate::endpoints::account::security_question::SecurityQuestion;
 pub struct NewPasswordRequest {
     pub account_id: i32,
     pub new_password: String,
-    pub questions: Vec<SecurityQuestion>
+    pub questions: Vec<SecurityQuestion>,
 }
-

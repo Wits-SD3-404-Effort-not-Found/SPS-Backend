@@ -1,7 +1,7 @@
-use serde::{Serialize, Deserialize};
+use serde::{Deserialize, Serialize};
 
 use crate::db;
-use chrono::{Utc, TimeZone};
+use chrono::{TimeZone, Utc};
 
 #[derive(Serialize, Deserialize)]
 pub struct RotationResponse {
@@ -13,18 +13,17 @@ pub struct RotationResponse {
     pub event_name: String,
     pub description: Option<String>,
     pub hospital_name: String,
-    pub discipline_name: String
+    pub discipline_name: String,
 }
 
 impl From<&db::Rotation> for RotationResponse {
     fn from(value: &db::Rotation) -> Self {
-        
-        let description = match &value.description{
+        let description = match &value.description {
             Some(val) => Some(val.clone()),
-            None => None
+            None => None,
         };
 
-        RotationResponse{
+        RotationResponse {
             account_id: value.account_id,
             event_id: value.event_id,
             rotation_id: value.rotation_id,
@@ -33,7 +32,7 @@ impl From<&db::Rotation> for RotationResponse {
             event_name: value.event_name.clone(),
             description,
             hospital_name: value.hospital_name.clone(),
-            discipline_name: value.discipline_name.clone()
+            discipline_name: value.discipline_name.clone(),
         }
     }
 }

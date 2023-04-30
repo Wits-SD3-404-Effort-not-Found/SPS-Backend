@@ -1,6 +1,6 @@
-use serde::{Deserialize, Serialize};
-use crypto::{ sha2::Sha256, digest::Digest };
 use crate::db::Account;
+use crypto::{digest::Digest, sha2::Sha256};
+use serde::{Deserialize, Serialize};
 
 #[derive(Serialize, Deserialize, Debug)]
 pub struct TokenRequest {
@@ -12,7 +12,7 @@ pub struct SessionToken {
     pub account_id: i32,
     pub session_token_id: i32,
     pub token: String,
-    pub expiry_date: chrono::NaiveDate
+    pub expiry_date: chrono::NaiveDate,
 }
 
 // Generate a unique Hash session token based off the account requesting
@@ -32,7 +32,7 @@ pub fn generate_session_token(account: &Account) -> SessionToken {
         session_token_id: 0,
         account_id: account.account_id,
         token: hasher.result_str(),
-        expiry_date: expiry_date.date()
+        expiry_date: expiry_date.date(),
     }
 }
 
@@ -49,7 +49,7 @@ mod tests {
 
         let token_result = super::generate_session_token(&test_account);
         let hex_result = hex::decode(&token_result.token); // if this fails then its an invalid hex string
-        // and concequently an invalid sha256
+                                                           // and concequently an invalid sha256
 
         assert!(!hex_result.is_err());
         let hex_str = hex_result.unwrap();

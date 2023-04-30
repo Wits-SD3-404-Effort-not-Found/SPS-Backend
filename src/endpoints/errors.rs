@@ -11,7 +11,7 @@ pub enum ApiErrors {
     #[response(status = 400)]
     _BadRequest(String),
     #[response(status = 500)]
-    InternalError(String)
+    InternalError(String),
 }
 
 pub type ApiResult<T> = Result<T, ApiErrors>;

@@ -1,7 +1,7 @@
-use serde::{Serialize, Deserialize};
+use serde::{Deserialize, Serialize};
 
 use crate::db;
-use chrono::{Utc, TimeZone};
+use chrono::{TimeZone, Utc};
 
 #[derive(Serialize, Deserialize)]
 pub struct EventFile {
@@ -10,14 +10,14 @@ pub struct EventFile {
     pub start_date: String,
     pub end_date: String,
     pub event_name: String,
-    pub description: Option<String>
+    pub description: Option<String>,
 }
 
 impl From<&db::Event> for EventFile {
     fn from(value: &db::Event) -> Self {
-        let description = match &value.description{
+        let description = match &value.description {
             Some(val) => Some(val.clone()),
-            None => None
+            None => None,
         };
 
         EventFile {
@@ -26,7 +26,7 @@ impl From<&db::Event> for EventFile {
             start_date: Utc.from_utc_datetime(&value.start_date).to_string(),
             end_date: Utc.from_utc_datetime(&value.end_date).to_string(),
             event_name: value.event_name.clone(),
-            description
+            description,
         }
     }
 }

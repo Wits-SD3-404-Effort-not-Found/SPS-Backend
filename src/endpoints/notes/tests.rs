@@ -45,7 +45,8 @@ fn test_add_note_existing_account_ok() {
         note_content: "".to_string(),
     };
 
-    let response = client_binding.post(uri!(super::add_note))
+    let response = client_binding
+        .post(uri!(super::add_note))
         .body(serde_json::to_string(&req_body).unwrap())
         .dispatch();
 
@@ -63,7 +64,8 @@ fn test_add_note_non_existing_account_not_found() {
         note_content: "".to_string(),
     };
 
-    let response = client_binding.post(uri!(super::add_note))
+    let response = client_binding
+        .post(uri!(super::add_note))
         .body(serde_json::to_string(&req_body).unwrap())
         .dispatch();
 
@@ -81,7 +83,8 @@ fn test_update_note_existing_note_ok() {
         note_title: "Lecture Notes".to_string()
     };
 
-    let response = client_binding.put(uri!(super::update_note))
+    let response = client_binding
+        .put(uri!(super::update_note))
         .body(serde_json::to_string(&req_body).unwrap())
         .dispatch();
 
@@ -99,7 +102,8 @@ fn test_update_note_nonexisting_note_not_found() {
         note_title: "Lecture Notes".to_string()
     };
 
-    let response = client_binding.put(uri!(super::update_note))
+    let response = client_binding
+        .put(uri!(super::update_note))
         .body(serde_json::to_string(&req_body).unwrap())
         .dispatch();
 
