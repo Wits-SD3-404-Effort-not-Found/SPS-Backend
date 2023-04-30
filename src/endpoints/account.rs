@@ -1,3 +1,7 @@
+mod password;
+mod security_question;
+mod manage;
+
 use rocket::serde::json::Json;
 use rocket_db_pools::{
     Connection,
@@ -6,9 +10,10 @@ use rocket_db_pools::{
 
 use crate::endpoints::errors::{ApiResult, ApiErrors};
 use crate::db::SPS;
+use crate::db;
 
 #[post("/account/reset_password", data = "<reset_details>")]
-pub async fn account_reset_password(mut db_conn: Connection<SPS>, reset_details: Json<management::NewPasswordRequest>) -> ApiResult<()> {
+pub async fn account_reset_password(mut db_conn: Connection<SPS>, reset_details: Json<password::NewPasswordRequest>) -> ApiResult<()> {
     let account_questions = match sqlx::query!(
         "SELECT secques_id as question_id, answer as correct_answer FROM tblSecurityAnswers WHERE account_id = ?",
         &reset_details.account_id
@@ -43,19 +48,24 @@ pub async fn account_reset_password(mut db_conn: Connection<SPS>, reset_details:
     Ok(())
 }
 
-mod management {
-    use serde::{Serialize, Deserialize};
-
-    #[derive(Serialize, Deserialize, Debug)]
-    pub struct NewPasswordRequest {
-        pub account_id: i32,
-        pub new_password: String,
-        pub questions: Vec<SecurityQuestion>
-    }
-
-    #[derive(Serialize, Deserialize, Debug)]
-    pub struct SecurityQuestion {
-        pub question_id: i32,
-        pub user_answer: String
-    }
+#[put("/account", data = "<updated_account>")]
+pub async fn update_account(mut db_conn: Connection<SPS>, updated_account: Json<manage::UserAccount>) -> ApiResult<()> {
+    Ok(())
 }
+
+#[get("/account/<account_id>")]
+pub async fn fetch_account(mut db_conn: Connection<SPS>, account_id: i32) -> ApiResult<Json<manage::UserAccount>> {
+    let db_account = match sqlx::query_as!(
+        db::Account,
+        "SELECT * FROM tblAccount WHERE account_id = ?",
+        &account_id,
+    ).fetch_one(&mut *db_conn).await {
+        Ok(val) => val,
+        Err(_) => return Err(ApiErrors::NotFound("No account with that ID exists".to_string()))
+    };
+
+    let account: manage::UserAccount = db_account.into();
+
+    Ok(Json(account))
+}
+
