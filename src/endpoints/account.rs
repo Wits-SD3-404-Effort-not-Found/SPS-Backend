@@ -1,3 +1,6 @@
+#[cfg(test)]
+mod tests;
+
 mod password;
 mod security_question;
 mod manage;
