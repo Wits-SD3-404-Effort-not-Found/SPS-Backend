@@ -15,6 +15,18 @@ use crate::endpoints::errors::{ApiResult, ApiErrors};
 use crate::db::SPS;
 use crate::db;
 
+/// ## Reset password for an account
+///
+/// ### Arguments
+///
+///  * account_id,
+///  * questions 
+///
+/// ### Possible Response
+/// 
+/// * 200 Ok
+/// * 403 Unauthorized
+/// * 404 Not Found
 #[post("/account/reset_password", data = "<reset_details>")]
 pub async fn account_reset_password(mut db_conn: Connection<SPS>, reset_details: Json<password::NewPasswordRequest>) -> ApiResult<()> {
     let account_questions = match sqlx::query!(
@@ -51,6 +63,19 @@ pub async fn account_reset_password(mut db_conn: Connection<SPS>, reset_details:
     Ok(())
 }
 
+/// ## Update a user's account details
+///
+/// ### Arguments
+///
+///  * account_id,
+///  * username
+///  * cell_number
+///  * profile_photo
+///
+/// ### Possible Response
+/// 
+/// * 200 Ok
+/// * 404 Not Found
 #[put("/account", data = "<updated_account>")]
 pub async fn update_account(mut db_conn: Connection<SPS>, updated_account: Json<manage::UpdateAccount>) -> ApiResult<()> {
 
@@ -74,6 +99,16 @@ pub async fn update_account(mut db_conn: Connection<SPS>, updated_account: Json<
     Ok(())
 }
 
+/// ## Fetch a user's account details
+///
+/// ### Arguments
+///
+///  * account_id,
+///
+/// ### Possible Response
+/// 
+/// * 200 Ok
+/// * 404 Not Found
 #[get("/account/<account_id>")]
 pub async fn fetch_account(mut db_conn: Connection<SPS>, account_id: i32) -> ApiResult<Json<manage::UserAccount>> {
     let db_account = match sqlx::query_as!(
