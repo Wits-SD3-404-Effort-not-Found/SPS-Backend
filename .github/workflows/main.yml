@@ -16,13 +16,20 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v3
-      - name: Testing
+
+      - name: Install Rust Toolchain - Stable
+        uses: actions-rs/toolchain@v1
+        with:
+          toolchain: stable
+          override: true
+      
+      - name: Run Tests
         run: cargo test --verbose
-      - run: cargo install cargo-binstall
-      - run: cargo binstall cargo-tarpaulin -y
-      - name: Code Coverage
-        run: cargo tarpaulin --verbose --all-features --workspace --timeout 120 --out Xml
-      - name: Upload Code Coverage
+
+      - name: Run Tarpaulin
+        uses: actions-rs/tarpaulin@v0.1
+
+      - name: Upload to Code Cov
         uses: codecov/codecov-action@v3.1.1
         with:
           fail_ci_if_error: true
@@ -32,5 +39,12 @@ jobs:
     needs: tests
     steps:
       - uses: actions/checkout@v3
+
+      - name: Install Rust Toolchain - Stable
+        uses: actions-rs/toolchain@v1
+        with:
+          toolchain: stable
+          override: true
+
       - name: Build
         run: cargo build --verbose
