@@ -29,3 +29,11 @@ impl From<db::Account> for UserAccount {
         }
     }
 }
+
+#[derive(Serialize, Deserialize)]
+pub struct UpdateAccount {
+    pub account_id: i32,
+    pub username: String,
+    pub cell_number: String,
+    pub profile_photo: Vec<u8>,
+}

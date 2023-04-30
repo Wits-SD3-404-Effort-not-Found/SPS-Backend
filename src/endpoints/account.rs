@@ -49,7 +49,25 @@ pub async fn account_reset_password(mut db_conn: Connection<SPS>, reset_details:
 }
 
 #[put("/account", data = "<updated_account>")]
-pub async fn update_account(mut db_conn: Connection<SPS>, updated_account: Json<manage::UserAccount>) -> ApiResult<()> {
+pub async fn update_account(mut db_conn: Connection<SPS>, updated_account: Json<manage::UpdateAccount>) -> ApiResult<()> {
+
+    let _db_account = match sqlx::query_as!(
+        db::Account,
+        "SELECT * FROM tblAccount WHERE account_id = ?",
+        updated_account.account_id
+    ).fetch_one(&mut *db_conn).await {
+        Ok(val) => val,
+        Err(_) => return Err(ApiErrors::NotFound("Account not found".to_string()))
+    };
+
+    match sqlx::query!(
+        "UPDATE tblAccount SET username = ?, cell_number = ?, profile_photo = ? WHERE account_id = ?",
+        updated_account.username, updated_account.cell_number, updated_account.profile_photo, updated_account.account_id
+    ).execute(&mut *db_conn).await {
+        Ok(_) => (),
+        Err(_) => return Err(ApiErrors::InternalError("Failed to update the account".to_string())),
+    };
+
     Ok(())
 }
 

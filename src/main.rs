@@ -49,6 +49,7 @@ fn rocket() -> _ {
             endpoints::events::fetch_events,
             endpoints::rotations::fetch_rotations,
             endpoints::account::fetch_account,
+            endpoints::account::update_account,
         ])
         .attach(db::SPS::init())
 }
