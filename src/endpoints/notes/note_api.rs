@@ -1,4 +1,4 @@
-use serde::{Serialize, Deserialize};
+use serde::{Deserialize, Serialize};
 
 use crate::db;
 
@@ -13,7 +13,7 @@ pub struct NoteResponse {
 pub struct NewNote {
     pub account_id: i32,
     pub note_title: String,
-    pub note_content: String
+    pub note_content: String,
 }
 
 #[derive(Serialize, Deserialize)]
@@ -28,7 +28,7 @@ impl From<&db::Note> for NoteResponse {
         NoteResponse {
             note_id: value.note_id,
             note_title: value.title.clone(),
-            note_content: value.content.clone()
+            note_content: value.content.clone(),
         }
     }
 }

@@ -45,7 +45,8 @@ fn test_add_note_existing_account_ok() {
         note_content: "".to_string(),
     };
 
-    let response = client_binding.post(uri!(super::add_note))
+    let response = client_binding
+        .post(uri!(super::add_note))
         .body(serde_json::to_string(&req_body).unwrap())
         .dispatch();
 
@@ -63,7 +64,8 @@ fn test_add_note_non_existing_account_not_found() {
         note_content: "".to_string(),
     };
 
-    let response = client_binding.post(uri!(super::add_note))
+    let response = client_binding
+        .post(uri!(super::add_note))
         .body(serde_json::to_string(&req_body).unwrap())
         .dispatch();
 
@@ -72,7 +74,7 @@ fn test_add_note_non_existing_account_not_found() {
 }
 
 #[test]
-fn test_update_note_existing_account_ok() {
+fn test_update_note_existing_note_ok() {
     let client_binding = CLIENT.lock().unwrap();
 
     let req_body = super::note_api::UpdateNote {
@@ -81,10 +83,30 @@ fn test_update_note_existing_account_ok() {
         note_title: "Lecture Notes".to_string()
     };
 
-    let response = client_binding.put(uri!(super::update_note))
+    let response = client_binding
+        .put(uri!(super::update_note))
         .body(serde_json::to_string(&req_body).unwrap())
         .dispatch();
 
     assert_eq!(response.status(), Status::Ok);
     assert!(response.body().is_none());
+}
+
+#[test]
+fn test_update_note_nonexisting_note_not_found() {
+    let client_binding = CLIENT.lock().unwrap();
+
+    let req_body = super::note_api::UpdateNote {
+        note_content: "Today we covered respiratory physiology. Here are the key points:\n\n* Oxygen and carbon dioxide exchange occurs in the alveoli of the lungs.\n* The respiratory system is controlled by the medulla oblongata in the brainstem.\n* The diaphragm and intercostal muscles are responsible for breathing.".to_string(),
+        note_id: 0,
+        note_title: "Lecture Notes".to_string()
+    };
+
+    let response = client_binding
+        .put(uri!(super::update_note))
+        .body(serde_json::to_string(&req_body).unwrap())
+        .dispatch();
+
+    assert_eq!(response.status(), Status::NotFound);
+    assert!(response.body().is_some());
 }

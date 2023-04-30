@@ -1,7 +1,7 @@
-pub mod auth;
 pub mod account;
-pub mod notes;
+pub mod auth;
 pub mod events;
+pub mod notes;
 pub mod rotations;
 
 mod errors;
@@ -16,10 +16,10 @@ use crate::db::SPS;
 //  Accessing settings, its async but might need to switched to sync later
 #[get("/")]
 pub async fn index(mut db: Connection<SPS>) -> &'static str {
-    sqlx::query("SELECT * FROM tblAccount").fetch_one(&mut *db).await
-        .and_then(|r| 
-            dbg!(r.try_get::<String, usize>(1))
-        )
+    sqlx::query("SELECT * FROM tblAccount")
+        .fetch_one(&mut *db)
+        .await
+        .and_then(|r| dbg!(r.try_get::<String, usize>(1)))
         .ok();
 
     "Wits Student Placement System API"
@@ -29,9 +29,9 @@ pub async fn index(mut db: Connection<SPS>) -> &'static str {
 mod tests {
 
     use rocket::http::Status;
-    
+
     use crate::tests::CLIENT;
-    
+
     #[test]
     fn test_index_none_ok() {
         let client_binding = CLIENT.lock().unwrap();

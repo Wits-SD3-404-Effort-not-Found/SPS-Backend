@@ -1,8 +1,8 @@
-use rocket_db_pools::Database;
 use rocket_db_pools::sqlx;
+use rocket_db_pools::Database;
 use serde::Serialize;
 
-// Rocket DB integration setup 
+// Rocket DB integration setup
 #[derive(Database)]
 #[database("sps_mysql")]
 pub struct SPS(sqlx::MySqlPool);
@@ -18,7 +18,7 @@ pub struct Account {
     pub hashed_password: String,
     pub username: String,
     pub cell_number: Option<String>,
-    pub profile_photo: Option<Vec<u8>>
+    pub profile_photo: Option<Vec<u8>>,
 }
 
 /// SQL Table schema for tblEvents
@@ -28,7 +28,7 @@ pub struct Event {
     pub start_date: chrono::NaiveDateTime,
     pub end_date: chrono::NaiveDateTime,
     pub event_name: String,
-    pub description: Option<String>
+    pub description: Option<String>,
 }
 
 /// SQL Table schema for tblRotations
@@ -58,12 +58,12 @@ pub struct Note {
     pub note_id: i32,
     pub account_id: i32,
     pub content: String,
-    pub title: String
+    pub title: String,
 }
 
 pub struct SessionToken {
     pub session_token_id: i32,
     pub account_id: i32,
     pub token: String,
-    pub expiry_date: chrono::NaiveDate
+    pub expiry_date: chrono::NaiveDate,
 }
