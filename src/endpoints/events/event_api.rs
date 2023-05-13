@@ -13,6 +13,24 @@ pub struct EventFile {
     pub description: Option<String>,
 }
 
+#[derive(Serialize, Deserialize)]
+pub struct NewEvent{
+    pub account_id: i32,
+    pub start_date: String,
+    pub end_date: String,
+    pub event_name: String,
+    pub description: Option<String>
+}
+
+#[derive(Serialize, Deserialize)]
+pub struct UpdateEvent{
+    pub event_id: i32,
+    pub start_date: String,
+    pub end_date: String,
+    pub event_name: String,
+    pub description: Option<String>
+}
+
 impl From<&db::Event> for EventFile {
     fn from(value: &db::Event) -> Self {
         let description = match &value.description {
