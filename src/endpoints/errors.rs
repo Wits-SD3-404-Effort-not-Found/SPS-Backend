@@ -9,7 +9,7 @@ pub enum ApiErrors {
     #[response(status = 404)]
     NotFound(String),
     #[response(status = 400)]
-    _BadRequest(String),
+    BadRequest(String),
     #[response(status = 500)]
     InternalError(String),
 }
