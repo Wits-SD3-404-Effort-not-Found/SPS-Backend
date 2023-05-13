@@ -16,6 +16,19 @@ pub struct RotationResponse {
     pub discipline_name: String,
 }
 
+#[derive(Serialize, Deserialize)]
+pub struct NewRotation {
+    pub account_id: i32,
+    pub event_id: i32,
+    pub rotation_id: i32,
+    pub start_date: String,
+    pub end_date: String,
+    pub event_name: String,
+    pub description: Option<String>,
+    pub hospital_name: String,
+    pub discipline_name: String,
+}
+
 impl From<&db::Rotation> for RotationResponse {
     fn from(value: &db::Rotation) -> Self {
         let description = match &value.description {
