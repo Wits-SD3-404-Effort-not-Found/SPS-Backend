@@ -3,7 +3,8 @@ mod event_api;
 mod tests;
 
 use rocket::serde::json::Json;
-use rocket_db_pools::{sqlx, Connection};
+use rocket_db_pools::{sqlx, Connection, Database};
+use sqlx::error::{Error, DatabaseError};
 
 use crate::db::{self, SPS};
 use crate::endpoints::errors::{ApiErrors, ApiResult};
@@ -164,6 +165,10 @@ pub async fn update_event(
 /// ## Delete a event file
 ///
 /// Removes both the database record, and the static file for the event
+/// 
+/// Note: Will not allow events that link to rotations to be deleted!
+/// 
+/// Security MoFos
 ///
 /// ### Arguments
 ///
@@ -193,6 +198,10 @@ pub async fn remove_event(event_id: i32, mut db_conn: Connection<SPS>) -> ApiRes
         .await
     {
         Ok(_) => (),
+        Err(sqlx::Error::Database(database_error)) => {
+            // Database error occurred
+            return Err(ApiErrors::BadRequest(("Cannot remove event that is rotation".to_string())))
+        },
         Err(_) => {
             return Err(ApiErrors::InternalError(
                 "Unable to remove file from database".to_string(),
