@@ -82,12 +82,20 @@ pub async fn auth_credentials(
             // but we don't have access to that database just yet. This is a work around that
             // means we can maintain the whole appearance of never signing up while still
             // actually having a sign up process. Its just obfuscated
-            log::info!("No database account found for received email");
-
             is_new_account = true;
             let mut new_account = db::Account::default();
             new_account.email = credentials.email.to_owned();
             new_account.hashed_password = credentials.hashed_password.to_owned();
+
+            match sqlx::query!(
+                "INSERT INTO tblAccount(email, hashed_password, username, cell_number) VALUES (?, ?, ?, ?)",
+                new_account.email, new_account.hashed_password, "", ""
+            ).execute(&mut *db_conn).await {
+                Ok(_) => (),
+                #[cfg(not(tarpaulin_include))]
+                Err(_) => return Err(ApiErrors::InternalError("Unable to create new account".to_string())),
+            }
+
             new_account
         }
     };
