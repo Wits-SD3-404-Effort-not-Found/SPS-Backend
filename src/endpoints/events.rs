@@ -3,8 +3,7 @@ mod event_api;
 mod tests;
 
 use rocket::serde::json::Json;
-use rocket_db_pools::{sqlx, Connection, Database};
-use sqlx::error::{Error, DatabaseError};
+use rocket_db_pools::{sqlx, Connection};
 
 use crate::db::{self, SPS};
 use crate::endpoints::errors::{ApiErrors, ApiResult};
@@ -48,7 +47,16 @@ pub async fn fetch_events(
         Err(_) => return Err(ApiErrors::NotFound("No events where found".to_string())),
     };
 
-    let events: Vec<event_api::EventFile> = db_events.iter().map(|event| event.into()).collect();
+    let events_and_rotations: Vec<event_api::EventFile> = db_events.iter().map(|event| event.into()).collect();
+
+    let mut events: Vec<event_api::EventFile> = vec![];
+    // if the event can also be found in the rotation table, then don't return it
+    for er in events_and_rotations {
+        match sqlx::query!("SELECT event_id FROM tblRotation WHERE event_id = ?", er.event_id).fetch_one(&mut *db_conn).await {
+            Ok(_) => (),
+            Err(_) => events.push(er),
+        }
+    }
 
     Ok(Json(events))
 }
@@ -198,9 +206,9 @@ pub async fn remove_event(event_id: i32, mut db_conn: Connection<SPS>) -> ApiRes
         .await
     {
         Ok(_) => (),
-        Err(sqlx::Error::Database(database_error)) => {
+        Err(sqlx::Error::Database(_)) => {
             // Database error occurred
-            return Err(ApiErrors::BadRequest(("Cannot remove event that is rotation".to_string())))
+            return Err(ApiErrors::BadRequest("Cannot remove event that is rotation".to_string()))
         },
         Err(_) => {
             return Err(ApiErrors::InternalError(
