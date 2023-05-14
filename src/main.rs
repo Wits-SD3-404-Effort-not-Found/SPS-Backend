@@ -53,7 +53,8 @@ fn rocket() -> _ {
                 endpoints::events::add_event,
                 endpoints::events::update_event,
                 endpoints::events::remove_event,
-                endpoints::security::fetch_all_security_questions
+                endpoints::security::fetch_all_security_questions,
+                endpoints::account::add_questions,
             ],
         )
         .attach(db::SPS::init())

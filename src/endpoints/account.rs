@@ -12,6 +12,8 @@ use crate::db;
 use crate::db::SPS;
 use crate::endpoints::errors::{ApiErrors, ApiResult};
 
+use self::security_question::AddSecurityQuestion;
+
 /// ## Reset password for an account
 ///
 /// ### Arguments
@@ -146,4 +148,27 @@ pub async fn fetch_account(
     let account: manage::UserAccount = db_account.into();
 
     Ok(Json(account))
+}
+
+#[post("/account/security", data = "<add_questions>")]
+pub async fn add_questions(mut db_conn: Connection<SPS>, add_questions: Json<AddSecurityQuestion>) -> ApiResult<()> {
+    match sqlx::query!(
+        "DELETE FROM tblSecurityAnswers WHERE account_id = ?",
+        add_questions.account_id
+    ).execute(&mut *db_conn).await {
+        Ok(_) => (),
+        Err(_) => return Err(ApiErrors::InternalError("Failed to remove old security questions".to_string())),
+    };
+
+    for question in &add_questions.questions {
+        match sqlx::query!(
+            "INSERT INTO tblSecurityAnswers (secques_id, account_id, answer) VALUES (?, ?, ?)",
+            question.question_id, add_questions.account_id, question.user_answer
+        ).execute(&mut *db_conn).await {
+            Ok(_) => (),
+            Err(_) => return Err(ApiErrors::InternalError("Failed to insert the new questions".to_string()))
+        }
+    }
+
+    Ok(())
 }
