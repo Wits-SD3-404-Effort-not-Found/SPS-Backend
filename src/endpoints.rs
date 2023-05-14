@@ -3,6 +3,7 @@ pub mod auth;
 pub mod events;
 pub mod notes;
 pub mod rotations;
+pub mod security;
 
 mod errors;
 

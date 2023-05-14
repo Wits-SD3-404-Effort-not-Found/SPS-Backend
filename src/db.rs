@@ -1,6 +1,6 @@
 use rocket_db_pools::sqlx;
 use rocket_db_pools::Database;
-use serde::Serialize;
+use serde::{Serialize, Deserialize};
 
 // Rocket DB integration setup
 #[derive(Database)]
@@ -66,4 +66,10 @@ pub struct SessionToken {
     pub account_id: i32,
     pub token: String,
     pub expiry_date: chrono::NaiveDate,
+}
+
+#[derive(Serialize, Deserialize)]
+pub struct SecurityQuestion {
+    pub secques_id: i32,
+    pub question: String,
 }
