@@ -34,6 +34,7 @@ pub async fn fetch_protocols(mut db_conn: Connection<SPS>) -> ApiResult<Json<Vec
     .await
     {
         Ok(val) => val,
+        #[cfg(not(tarpauling_include))]
         Err(_) => {
             return Err(ApiErrors::InternalError(
                 "Failed to fetch protocols".to_string(),
@@ -86,6 +87,7 @@ pub async fn fetch_notes(
     .await
     {
         Ok(val) => val,
+        #[cfg(not(tarpaulin_include))]
         Err(_) => {
             return Err(ApiErrors::InternalError(
                 "Unable to fetch notes".to_string(),
@@ -142,6 +144,7 @@ pub async fn add_note(
     .await
     {
         Ok(_) => (),
+        #[cfg(not(tarpauling_include))]
         Err(_) => {
             return Err(ApiErrors::InternalError(
                 "Unable to save file in database".to_string(),
@@ -194,6 +197,7 @@ pub async fn update_note(
     .await
     {
         Ok(_) => (),
+        #[cfg(not(tarpauling_include))]
         Err(_) => {
             return Err(ApiErrors::InternalError(
                 "Failed to update the note".to_string(),
@@ -236,6 +240,7 @@ pub async fn remove_note(note_id: i32, mut db_conn: Connection<SPS>) -> ApiResul
         .await
     {
         Ok(_) => (),
+        #[cfg(not(tarpaulin_include))]
         Err(_) => {
             return Err(ApiErrors::InternalError(
                 "Unable to remove file from database".to_string(),

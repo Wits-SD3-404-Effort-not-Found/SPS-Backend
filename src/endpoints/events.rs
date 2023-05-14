@@ -44,8 +44,17 @@ pub async fn fetch_events(
     .await
     {
         Ok(val) => val,
-        Err(_) => return Err(ApiErrors::NotFound("No events where found".to_string())),
+        #[cfg(not(tarpaulin_include))]
+        Err(_) => {
+            return Err(ApiErrors::InternalError(
+                "Unable to fetch events".to_string(),
+            ))
+        }
     };
+
+    if db_events.len() == 0 {
+        return Err(ApiErrors::NotFound("No events were found".to_string()));
+    }
 
     let events_and_rotations: Vec<event_api::EventFile> = db_events.iter().map(|event| event.into()).collect();
 
@@ -105,6 +114,7 @@ pub async fn add_event(
     .await
     {
         Ok(_) => (),
+        #[cfg(not(tarpaulin_include))]
         Err(_) => {
             return Err(ApiErrors::InternalError(
                 "Unable to save file in database".to_string(),
@@ -160,6 +170,7 @@ pub async fn update_event(
     .await
     {
         Ok(_) => (),
+        #[cfg(not(tarpaulin_include))]
         Err(_) => {
             return Err(ApiErrors::InternalError(
                 "Failed to update the event".to_string(),
@@ -210,6 +221,7 @@ pub async fn remove_event(event_id: i32, mut db_conn: Connection<SPS>) -> ApiRes
             // Database error occurred
             return Err(ApiErrors::BadRequest("Cannot remove event that is rotation".to_string()))
         },
+        #[cfg(not(tarpaulin_include))]
         Err(_) => {
             return Err(ApiErrors::InternalError(
                 "Unable to remove file from database".to_string(),
