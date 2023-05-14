@@ -1,3 +1,6 @@
+#[cfg(test)]
+mod tests;
+
 use rocket::serde::json::Json;
 use rocket_db_pools::Connection;
 
