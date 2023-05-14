@@ -23,9 +23,10 @@ fn validate_email(email: &String) -> ApiResult<()> {
     // Regex setup and error handling
     let email_rule_regex = match Regex::new(r"^[0-9]{7}@students.wits.ac.za$") {
         Ok(val) => val,
+        #[cfg(not(tarpaulin_include))]
         Err(e) => {
             return Err(ApiErrors::InternalError(format!(
-                "Internal Server Ererrorsror: {}",
+                "Internal Server Error: {}",
                 e
             )))
         }
@@ -143,6 +144,7 @@ pub async fn auth_security_questions(
         &reset_details.email
     ).fetch_all(&mut *db_conn).await {
         Ok(val) => val,
+        #[cfg(not(tarpaulin_include))]
         Err(_) => return Err(ApiErrors::InternalError("Failed to query database".to_string()))
     };
 
@@ -219,6 +221,7 @@ pub async fn auth_session(
             .await
             {
                 Ok(_) => (),
+                #[cfg(not(tarpaulin_include))]
                 Err(_) => {
                     return Err(ApiErrors::InternalError(
                         "Failed to delete expired session token".to_string(),
@@ -255,6 +258,7 @@ pub async fn remove_session(token: String, mut db_conn: Connection<SPS>) -> ApiR
     .await
     {
         Ok(_) => (),
+        #[cfg(not(tarpaulin_include))]
         Err(_) => {
             return Err(ApiErrors::InternalError(
                 "Unable to remove session token from database".to_string(),

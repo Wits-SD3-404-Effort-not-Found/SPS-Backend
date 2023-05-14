@@ -72,3 +72,46 @@ fn test_auth_credentials_incorrect_credentials_unauth() {
     assert_eq!(response.status(), Status::Unauthorized);
     assert!(response.body().is_some());
 }
+
+#[test]
+fn test_auth_security_questions_valid_email_ok() {
+    let client_binding = crate::tests::CLIENT.lock().unwrap();
+    let invalid_email_body = super::security_questions::SecurityQuestionsRequest {
+        email: "2763528@students.wits.ac.za".to_string()
+    };
+
+
+    let response = client_binding.post(uri!(super::auth_security_questions))
+        .body(serde_json::to_string(&invalid_email_body).unwrap())
+        .dispatch();
+    assert_eq!(response.status(), Status::Ok);
+    assert!(response.body().is_some());
+}
+
+#[test]
+fn test_auth_security_questions_invalid_email_unauth() {
+    let client_binding = crate::tests::CLIENT.lock().unwrap();
+    let invalid_email_body = super::security_questions::SecurityQuestionsRequest {
+        email: "0000000@gmail.wits.ac.za".to_string()
+    };
+
+    let response = client_binding.post(uri!(super::auth_security_questions))
+        .body(serde_json::to_string(&invalid_email_body).unwrap())
+        .dispatch();
+    assert_eq!(response.status(), Status::Unauthorized);
+    assert!(response.body().is_some());
+}
+
+#[test]
+fn test_auth_session_no_token_unauth() {
+    let client_binding = crate::tests::CLIENT.lock().unwrap();
+    let body = super::session_token::TokenRequest {
+        session_token: "asdfasdf".to_string(),
+        account_id: 1
+    };
+
+    let response = client_binding.post(uri!(super::auth_session))
+        .body(serde_json::to_string(&body).unwrap()).dispatch();
+    assert_eq!(response.status(), Status::Unauthorized);
+    assert!(response.body().is_some());
+}

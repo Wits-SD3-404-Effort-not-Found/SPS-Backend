@@ -62,6 +62,7 @@ pub async fn account_reset_password(
     .execute(&mut *db_conn)
     .await
     {
+        #[cfg(not(tarpaulin_include))]
         Err(_) => {
             return Err(ApiErrors::InternalError(
                 "Failed to update account password".to_string(),
@@ -108,6 +109,7 @@ pub async fn update_account(
         updated_account.username, updated_account.cell_number, updated_account.profile_photo, updated_account.account_id
     ).execute(&mut *db_conn).await {
         Ok(_) => (),
+        #[cfg(not(tarpaulin_include))]
         Err(_) => return Err(ApiErrors::InternalError("Failed to update the account".to_string())),
     };
 

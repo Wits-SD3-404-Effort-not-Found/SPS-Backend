@@ -41,8 +41,15 @@ pub async fn fetch_rotations(
         account_id
     ).fetch_all(&mut *db_conn).await {
         Ok(val) => val,
-        Err(_) => return Err(ApiErrors::NotFound("No rotations where found".to_string()))
+        #[cfg(not(tarpaulin_include))]
+        Err(_) => {
+            return Err(ApiErrors::InternalError("Failed to fetch rotations".to_string()))
+        }
     };
+
+    if db_rotations.len() == 0 {
+        return Err(ApiErrors::NotFound("No rotations where found".to_string()));
+    }
 
     let rotations: Vec<rotation_api::RotationResponse> = db_rotations
         .iter()
