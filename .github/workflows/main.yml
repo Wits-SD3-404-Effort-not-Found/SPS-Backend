@@ -1,10 +1,9 @@
 name: SPS Backend CI
 
-on:
-  push:
-    branches: [ "dev" ]
+on: 
+  workflow_dispatch:
   pull_request:
-    branches: [ "main", "dev" ]
+    branches: [ "main" ]
 
 env:
   CARGO_TERM_COLOR: always
