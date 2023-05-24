@@ -34,7 +34,7 @@ pub async fn fetch_protocols(mut db_conn: Connection<SPS>) -> ApiResult<Json<Vec
     .await
     {
         Ok(val) => val,
-        #[cfg(not(tarpauling_include))]
+        #[cfg(not(tarpaulin_include))]
         Err(_) => {
             return Err(ApiErrors::InternalError(
                 "Failed to fetch protocols".to_string(),

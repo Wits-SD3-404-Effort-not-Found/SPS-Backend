@@ -73,3 +73,12 @@ pub struct SecurityQuestion {
     pub secques_id: i32,
     pub question: String,
 }
+
+#[derive(Serialize, Deserialize)]
+pub struct Staff {
+    pub staff_id: i32,
+    pub first_name: String,
+    pub last_name: String,
+    pub email: String,
+    pub cell_number: String
+}

@@ -4,6 +4,7 @@ pub mod events;
 pub mod notes;
 pub mod rotations;
 pub mod security;
+pub mod staff;
 
 mod errors;
 
