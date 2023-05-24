@@ -33,6 +33,7 @@ CREATE TABLE tblNotes (
   account_id INT NOT NULL,
   title VARCHAR(255) NOT NULL,
   content TEXT NOT NULL,
+  public BOOLEAN NOT NULL DEFAULT 0,
   FOREIGN KEY (account_id) REFERENCES tblAccount(account_id)
 );
 

@@ -59,6 +59,7 @@ pub struct Note {
     pub account_id: i32,
     pub content: String,
     pub title: String,
+    pub public: bool,
 }
 
 pub struct SessionToken {
