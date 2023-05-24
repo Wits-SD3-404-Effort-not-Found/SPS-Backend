@@ -80,7 +80,7 @@ pub async fn fetch_notes(
 
     let db_notes = match sqlx::query_as!(
         db::Note,
-        "SELECT * FROM tblNotes WHERE account_id = ?",
+        "SELECT note_id, account_id, title, content, public as `public: bool` FROM tblNotes WHERE account_id = ?",
         account_id
     )
     .fetch_all(&mut *db_conn)
@@ -135,10 +135,11 @@ pub async fn add_note(
     }
 
     match sqlx::query!(
-        "INSERT INTO tblNotes (account_id, content, title) VALUES (?, ?, ?)",
+        "INSERT INTO tblNotes (account_id, content, title, public) VALUES (?, ?, ?, ?)",
         new_note.account_id,
         new_note.note_content,
         new_note.note_title,
+        new_note.note_public,
     )
     .execute(&mut *db_conn)
     .await
@@ -176,7 +177,7 @@ pub async fn update_note(
     // Fetching the notes record
     let _db_note = match sqlx::query_as!(
         db::Note,
-        "SELECT * FROM tblNotes WHERE note_id = ?",
+        "SELECT note_id, account_id, title, content, public as `public: bool` FROM tblNotes WHERE note_id = ?",
         update_note.note_id
     )
     .fetch_one(&mut *db_conn)
@@ -188,10 +189,11 @@ pub async fn update_note(
 
     // Updating the recrod
     match sqlx::query!(
-        "UPDATE tblNotes SET title = ?, content = ? WHERE note_id = ?",
+        "UPDATE tblNotes SET title = ?, content = ?, public = ? WHERE note_id = ?",
         update_note.note_title,
         update_note.note_content,
-        update_note.note_id
+        update_note.note_id,
+        update_note.note_public,
     )
     .execute(&mut *db_conn)
     .await
@@ -225,7 +227,7 @@ pub async fn remove_note(note_id: i32, mut db_conn: Connection<SPS>) -> ApiResul
     // Fetching the notes record
     let _db_note = match sqlx::query_as!(
         db::Note,
-        "SELECT * FROM tblNotes WHERE note_id = ?",
+        "SELECT note_id, account_id, title, content, public as `public: bool` FROM tblNotes WHERE note_id = ?",
         note_id
     )
     .fetch_one(&mut *db_conn)
