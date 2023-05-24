@@ -21,7 +21,7 @@ use crate::endpoints::errors::{ApiErrors, ApiResult};
 /// email address.
 fn validate_email(email: &String) -> ApiResult<()> {
     // Regex setup and error handling
-    let email_rule_regex = match Regex::new(r"^[0-9]{7}@students.wits.ac.za$") {
+    let email_rule_regex = match Regex::new(r"^([0-9]{7}@students\.wits\.ac\.za|\S+\.\S+@wits\.ac\.za)$") {
         Ok(val) => val,
         #[cfg(not(tarpaulin_include))]
         Err(e) => {
