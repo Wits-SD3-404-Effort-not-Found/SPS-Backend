@@ -12,6 +12,14 @@ fn test_fetch_protocols_none_ok() {
 }
 
 #[test]
+fn test_fetch_public_notes_none_ok() {
+    let client_binding = CLIENT.lock().unwrap();
+    let response = client_binding.get(uri!(super::fetch_public_notes)).dispatch();
+    assert_eq!(response.status(), Status::Ok);
+    assert!(response.body().is_some());
+}
+
+#[test]
 fn test_fetch_notes_existing_account_with_notes_ok() {
     let client_binding = CLIENT.lock().unwrap();
     let response = client_binding.get(uri!(super::fetch_notes(1))).dispatch();
