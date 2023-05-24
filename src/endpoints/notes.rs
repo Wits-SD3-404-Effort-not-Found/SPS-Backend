@@ -192,8 +192,8 @@ pub async fn update_note(
         "UPDATE tblNotes SET title = ?, content = ?, public = ? WHERE note_id = ?",
         update_note.note_title,
         update_note.note_content,
-        update_note.note_id,
         update_note.note_public,
+        update_note.note_id,
     )
     .execute(&mut *db_conn)
     .await
