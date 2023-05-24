@@ -104,6 +104,46 @@ pub async fn fetch_notes(
     Ok(Json(notes))
 }
 
+
+/// ## Fetch List of Public Notes
+///
+/// Returns a list of notes if they have been flagged as public
+///
+/// ### Arguments
+///
+/// * none 
+///
+/// ### Possible Responses
+///
+/// * 200 Ok
+/// * 404 Not Found
+#[get("/notes/public")]
+pub async fn fetch_public_notes(mut db_conn: Connection<SPS>) -> ApiResult<Json<Vec<note_api::NoteResponse>>> {
+    let db_notes = match sqlx::query_as!(
+        db::Note,
+        "SELECT note_id, account_id, title, content, public as `public: bool` FROM tblNotes WHERE public = 1",
+    )
+    .fetch_all(&mut *db_conn)
+    .await
+    {
+        Ok(val) => val,
+        #[cfg(not(tarpaulin_include))]
+        Err(_) => {
+            return Err(ApiErrors::InternalError(
+                "Unable to fetch notes".to_string(),
+            ))
+        }
+    };
+
+    if db_notes.len() == 0 {
+        return Err(ApiErrors::NotFound("No notes were found".to_string()));
+    }
+
+    let notes: Vec<note_api::NoteResponse> = db_notes.iter().map(|note| note.into()).collect();
+
+    Ok(Json(notes))
+}
+
 /// ## Add a note file to an account
 ///
 /// Add a note to an account
