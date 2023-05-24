@@ -81,3 +81,11 @@ CREATE TABLE tblSecurityAnswers (
     FOREIGN KEY (secques_id) REFERENCES tblSecurityQuestions(secques_id),
     FOREIGN KEY (account_id) REFERENCES tblAccount(account_id)
 );
+
+CREATE TABLE tblStaff (
+  staff_id INT PRIMARY KEY AUTO_INCREMENT,
+  first_name VARCHAR(255) NOT NULL,
+  last_name VARCHAR(255) NOT NULL,
+  email VARCHAR(255) NOT NULL,
+  cell_number VARCHAR(255) NOT NULL
+);

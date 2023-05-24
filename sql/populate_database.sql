@@ -72,3 +72,9 @@ VALUES
   (2, 3, 5),
   (3, 2, 1),
   (4, 5, 4);
+
+INSERT INTO tblStaff (first_name, last_name, email, cell_number) VALUES
+('John', 'Doe', 'john.doe@wits.ac.za', '123-456-7890'),
+('Jane', 'Smith', 'jane.smith@wits.ac.za', '987-654-3210'),
+('David', 'Johnson', 'david.johnson@wits.ac.za', '555-555-5555'),
+('Sarah', 'Williams', 'sarah.williams@wits.ac.za', '999-999-9999');
