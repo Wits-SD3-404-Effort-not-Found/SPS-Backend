@@ -7,8 +7,8 @@ on:
 
 env:
   CARGO_TERM_COLOR: always
-  ROCKET_DATABASES: ${{ secrets.DB_URL }}
-  DATABASE_URL: ${{ secrets.SQLX_DB_URL }}
+  ROCKET_DATABASES: mysql://root:root@127.0.0.1/ApolloniusTesting
+  DATABASE_URL: mysql://root:root@127.0.0.1/ApolloniusTesting
 
 jobs:
   tests:
@@ -16,20 +16,20 @@ jobs:
     steps:
       - uses: actions/checkout@v3
 
+      - name: Start Test Mysql server
+        run: sudo /etc/ini.d/mysql start
+
+      - name: Create Test DB
+        run: mysql -uroot -proot < ./sql/test_db_setup.sql
+
       - name: Install Rust Toolchain - Stable
         uses: actions-rs/toolchain@v1
         with:
           toolchain: stable
           override: true
 
-      - name: Reset mysql server for Cargo Tests 
-        run: mysql -u root -p${{ secrets.TEST_DB_PASSWORD }} -h${{ secrets.TEST_DB_HOST }} Apollonius-Testing < ./sql/test_db_setup.sql
-      
-      - name: Run Tests
+      - name: Run Cargo tests
         run: cargo test --verbose
-
-      - name: Reset mysql server for Tarpaulin 
-        run: mysql -u root -p${{ secrets.TEST_DB_PASSWORD }} -h${{ secrets.TEST_DB_HOST }} Apollonius-Testing < ./sql/test_db_setup.sql
 
       - name: Installing Tarpaulin
         run: cargo install cargo-tarpaulin

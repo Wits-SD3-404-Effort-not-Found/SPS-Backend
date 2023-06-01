@@ -1,3 +1,6 @@
+CREATE DATABASE ApolloniusTesting
+USE ApolloniusTesting
+
 DROP TABLE IF EXISTS tblAccount ;
 DROP TABLE IF EXISTS tblHospital ;
 DROP TABLE IF EXISTS tblDiscipline ;
