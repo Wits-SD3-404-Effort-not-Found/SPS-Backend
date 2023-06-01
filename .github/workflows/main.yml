@@ -17,7 +17,7 @@ jobs:
       - uses: actions/checkout@v3
 
       - name: Start Test Mysql server
-        run: sudo /etc/ini.d/mysql start
+        run: sudo /etc/init.d/mysql start
 
       - name: Create Test DB
         run: mysql -uroot -proot < ./sql/test_db_setup.sql
