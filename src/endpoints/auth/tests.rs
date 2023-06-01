@@ -1,6 +1,6 @@
 use rocket::http::Status;
 
-use crate::rocket;
+use crate::{rocket, tests::CLIENT};
 
 #[test]
 fn test_validate_email_valid_email_true() {
@@ -41,7 +41,7 @@ fn test_auth_credentials_correct_credentials_ok() {
     let client_binding = crate::tests::CLIENT.lock().unwrap();
 
     let valid_body = super::credentials::CredentialRequest {
-        email: "2763528@students.wits.ac.za".to_string(),
+        email: "0000000@students.wits.ac.za".to_string(),
         hashed_password: "0b14d501a594442a01c6859541bcb3e8164d183d32937b851835442f69d5c94e"
             .to_string(),
     };
@@ -77,7 +77,7 @@ fn test_auth_credentials_incorrect_credentials_unauth() {
 fn test_auth_security_questions_valid_email_ok() {
     let client_binding = crate::tests::CLIENT.lock().unwrap();
     let invalid_email_body = super::security_questions::SecurityQuestionsRequest {
-        email: "2763528@students.wits.ac.za".to_string()
+        email: "0000000@students.wits.ac.za".to_string()
     };
 
 
@@ -114,4 +114,27 @@ fn test_auth_session_no_token_unauth() {
         .body(serde_json::to_string(&body).unwrap()).dispatch();
     assert_eq!(response.status(), Status::Unauthorized);
     assert!(response.body().is_some());
+}
+
+#[test]
+fn test_remove_session_exisiting_token_ok() {
+    let client_binding = CLIENT.lock().unwrap();
+
+    let response = client_binding.delete(uri!(
+        super::remove_session("4a5c5b7f0e0f70eabfe5e2d3fb8ae19de7427f8d48f2e502ee4e61c9af174620")
+    )).dispatch();
+
+    assert_eq!(response.status(), Status::Ok);
+    assert!(response.body().is_none());
+}
+
+fn test_remove_session_nonexisiting_token_not_found() {
+    let client_binding = CLIENT.lock().unwrap();
+
+    let response = client_binding.delete(uri!(
+        super::remove_session("jeffrey")
+    )).dispatch();
+
+    assert_eq!(response.status(), Status::Ok);
+    assert!(response.body().is_none());
 }

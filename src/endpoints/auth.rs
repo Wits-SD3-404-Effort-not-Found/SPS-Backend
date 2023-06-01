@@ -245,6 +245,16 @@ pub async fn auth_session(
     Ok(())
 }
 
+/// ## Remove the specified session token from the database
+/// 
+/// ### Arguments
+/// 
+/// * Token
+/// 
+/// ### Possible Responses
+/// 
+/// * 200 Ok
+/// * 404 Not Found
 #[delete("/authentication/session/<token>")]
 pub async fn remove_session(token: String, mut db_conn: Connection<SPS>) -> ApiResult<()> {
     let ses_token_id: i32 = match sqlx::query!(

@@ -17,7 +17,7 @@ fn test_fetch_rotations_existing_account_with_rotations_ok() {
 fn test_fetch_rotations_exisiting_account_without_rotations_notfound() {
     let client_binding = CLIENT.lock().unwrap();
     let response = client_binding
-        .get(uri!(super::fetch_rotations(10)))
+        .get(uri!(super::fetch_rotations(2)))
         .dispatch();
     assert_eq!(response.status(), Status::NotFound);
     assert!(response.body().is_some());
