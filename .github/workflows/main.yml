@@ -29,7 +29,7 @@ jobs:
         run: cargo test --verbose
 
       - name: Reset mysql server for Tarpaulin 
-        run: mysql -u root -p${{ secrets.TEST_DB_PASSWORD }} -h${{ secrets.SQLX_DB_URL }} Apollonius-Testing < ./sql/test_db_setup.sql
+        run: mysql -u root -p${{ secrets.TEST_DB_PASSWORD }} -h${{ secrets.TEST_DB_HOST }} Apollonius-Testing < ./sql/test_db_setup.sql
 
       - name: Installing Tarpaulin
         run: cargo install cargo-tarpaulin
