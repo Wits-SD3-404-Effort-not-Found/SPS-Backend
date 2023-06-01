@@ -7,8 +7,8 @@ on:
 
 env:
   CARGO_TERM_COLOR: always
-  ROCKET_DATABASES: mysql://root:root@127.0.0.1/ApolloniusTesting
-  DATABASE_URL: mysql://root:root@127.0.0.1/ApolloniusTesting
+  ROCKET_DATABASES: mysql://root:root@localhost/ApolloniusTesting
+  DATABASE_URL: mysql://root:root@localhost/ApolloniusTesting
 
 jobs:
   tests:
