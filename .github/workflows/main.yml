@@ -7,7 +7,7 @@ on:
 
 env:
   CARGO_TERM_COLOR: always
-  ROCKET_DATABASES: sps_mysql.url = "mysql://root:root@localhost/ApolloniusTesting"
+  ROCKET_DATABASES: "{ sps_mysql = { url = mysql://root:root@localhost/ApolloniusTesting } }"
   DATABASE_URL: mysql://root:root@localhost/ApolloniusTesting
 
 jobs:
