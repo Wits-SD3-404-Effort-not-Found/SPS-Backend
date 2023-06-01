@@ -62,5 +62,11 @@ jobs:
           toolchain: stable
           override: true
 
+      - name: Start Test Mysql server
+        run: sudo /etc/init.d/mysql start
+
+      - name: Create Test DB
+        run: mysql -uroot -proot < ./sql/test_db_setup.sql
+
       - name: Build
         run: cargo build --verbose
