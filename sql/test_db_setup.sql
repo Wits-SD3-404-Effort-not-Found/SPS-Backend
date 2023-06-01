@@ -110,6 +110,9 @@ INSERT INTO tblSecurityAnswers (secques_id, account_id, answer) VALUES
 (1, 1, 'a459891617d735655dcfed3e37db66fa07f0175866ebf35f9de8ccc59c0840bb'), /*jeffrey*/
 (2, 1, 'b93b9776163702f1fad6cbaf815326a41b3285d0961f4e838ebdb8ad52e5f16e'); /*manchester united*/
 
+INSERT INTO tblSessionToken (account_id, token, expiry_date)
+VALUES (1, '4a5c5b7f0e0f70eabfe5e2d3fb8ae19de7427f8d48f2e502ee4e61c9af174620', '2023-06-30');
+
 INSERT INTO tblProtocol (title, content) VALUES
 ('HHHH', 'Hazard - Identify any hazards that can cause harm to both you and the casulty.\nHello - Introduce yourself yourself to the casualty, and ask for consent to administer treatment.\nHistory - Ask the casualty what happened.\nHelp - call emergency services if necessary, else administer first aid.'),
 ('ABC', 'Airway - Check that the casualtys airway is unblocked.\nBreathing - Check that the casualty is breathing.\nCirculation - Check that the casulty has circulation with a capillary pinch test, or by measuring their pulse.\nIf any of these fail, administer CPR immediately'),
@@ -128,7 +131,6 @@ INSERT INTO tblDiscipline (discipline_name) VALUES
 INSERT INTO tblEvents (account_id, start_date, end_date, event_name, description) VALUES 
 (1, '2022-01-01', '2022-01-07', 'New Year Event', 'Celebrating the New Year'),
 (1, '2022-02-01', '2022-02-20', 'Rotation 1', 'First rotation of the year');
-
 
 INSERT INTO tblRotation (event_id, hospital_id, discipline_id) VALUES 
 (2, 1, 1);

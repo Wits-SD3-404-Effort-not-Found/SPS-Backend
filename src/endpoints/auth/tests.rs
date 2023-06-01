@@ -1,6 +1,6 @@
 use rocket::http::Status;
 
-use crate::rocket;
+use crate::{rocket, tests::CLIENT};
 
 #[test]
 fn test_validate_email_valid_email_true() {
@@ -114,4 +114,27 @@ fn test_auth_session_no_token_unauth() {
         .body(serde_json::to_string(&body).unwrap()).dispatch();
     assert_eq!(response.status(), Status::Unauthorized);
     assert!(response.body().is_some());
+}
+
+#[test]
+fn test_remove_session_exisiting_token_ok() {
+    let client_binding = CLIENT.lock().unwrap();
+
+    let response = client_binding.delete(uri!(
+        super::remove_session("4a5c5b7f0e0f70eabfe5e2d3fb8ae19de7427f8d48f2e502ee4e61c9af174620")
+    )).dispatch();
+
+    assert_eq!(response.status(), Status::Ok);
+    assert!(response.body().is_none());
+}
+
+fn test_remove_session_nonexisiting_token_not_found() {
+    let client_binding = CLIENT.lock().unwrap();
+
+    let response = client_binding.delete(uri!(
+        super::remove_session("jeffrey")
+    )).dispatch();
+
+    assert_eq!(response.status(), Status::Ok);
+    assert!(response.body().is_none());
 }
