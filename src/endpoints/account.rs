@@ -165,11 +165,28 @@ pub async fn fetch_account(
 /// * 404 Not Found
 #[post("/account/security", data = "<add_questions>")]
 pub async fn add_questions(mut db_conn: Connection<SPS>, add_questions: Json<AddSecurityQuestion>) -> ApiResult<()> {
+    let db_account = match sqlx::query_as!(
+        db::Account,
+        "SELECT * FROM tblAccount WHERE account_id = ?",
+        &account_id,
+    )
+    .fetch_one(&mut *db_conn)
+    .await
+    {
+        Ok(val) => val,
+        Err(_) => {
+            return Err(ApiErrors::NotFound(
+                "No account with that ID exists".to_string(),
+            ))
+        }
+    };
+
     match sqlx::query!(
         "DELETE FROM tblSecurityAnswers WHERE account_id = ?",
         add_questions.account_id
     ).execute(&mut *db_conn).await {
         Ok(_) => (),
+        #[cfg(not(tarpaulin_include))]
         Err(_) => return Err(ApiErrors::InternalError("Failed to remove old security questions".to_string())),
     };
 
@@ -179,6 +196,7 @@ pub async fn add_questions(mut db_conn: Connection<SPS>, add_questions: Json<Add
             question.question_id, add_questions.account_id, question.user_answer
         ).execute(&mut *db_conn).await {
             Ok(_) => (),
+            #[cfg(not(tarpaulin_include))]
             Err(_) => return Err(ApiErrors::InternalError("Failed to insert the new questions".to_string()))
         }
     }
