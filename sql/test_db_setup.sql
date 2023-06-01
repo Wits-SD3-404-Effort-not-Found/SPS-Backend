@@ -1,5 +1,5 @@
-CREATE DATABASE ApolloniusTesting
-USE ApolloniusTesting
+CREATE DATABASE ApolloniusTesting;
+USE ApolloniusTesting;
 
 DROP TABLE IF EXISTS tblAccount ;
 DROP TABLE IF EXISTS tblHospital ;
