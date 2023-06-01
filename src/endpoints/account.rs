@@ -24,7 +24,7 @@ use self::security_question::AddSecurityQuestion;
 /// ### Possible Response
 ///
 /// * 200 Ok
-/// * 403 Unauthorized
+/// * 401 Unauthorized
 /// * 404 Not Found
 #[post("/account/reset_password", data = "<reset_details>")]
 pub async fn account_reset_password(
@@ -152,6 +152,17 @@ pub async fn fetch_account(
     Ok(Json(account))
 }
 
+/// ## Reset a users security questions 
+///
+/// ### Arguments
+///
+///  * account_id,
+///  * list of security questions
+///
+/// ### Possible Response
+///
+/// * 200 Ok
+/// * 404 Not Found
 #[post("/account/security", data = "<add_questions>")]
 pub async fn add_questions(mut db_conn: Connection<SPS>, add_questions: Json<AddSecurityQuestion>) -> ApiResult<()> {
     match sqlx::query!(

@@ -8,6 +8,16 @@ use crate::db;
 use crate::db::SPS;
 use crate::endpoints::errors::{ApiErrors, ApiResult};
 
+/// ## Fetch all security questions in the database
+/// 
+/// ### Arguments
+/// 
+/// * None
+/// 
+/// ### Possible Responses
+/// 
+/// * 200 Ok
+/// * 404 Not Found
 #[get("/security/questions")]
 pub async fn fetch_all_security_questions(mut db_conn: Connection<SPS>) -> ApiResult<Json<Vec<db::SecurityQuestion>>> {
     let db_questions = match sqlx::query_as!(
