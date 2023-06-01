@@ -50,8 +50,7 @@ INSERT INTO tblHospital (hospital_name) VALUES
 ('Mayo Clinic'),
 ('Massachusetts General Hospital');
 
-INSERT INTO tblDiscipline (discipline_name)
-VALUES
+INSERT INTO tblDiscipline (discipline_name) VALUES
 ('Cardiology'),
 ('Dermatology'),
 ('Endocrinology'),
@@ -65,8 +64,7 @@ INSERT INTO tblEvents (account_id, start_date, end_date, event_name, description
 (3, '2022-10-31', '2022-10-31', 'Halloween Event', 'Dress up and have fun on Halloween'),
 (4, '2022-12-25', '2022-12-25', 'Christmas Event', 'Celebrate the birth of Jesus Christ');
 
-INSERT INTO tblRotation (event_id, hospital_id, discipline_id)
-VALUES 
+INSERT INTO tblRotation (event_id, hospital_id, discipline_id) VALUES 
   (1, 1, 1),
   (1, 2, 2),
   (2, 3, 5),

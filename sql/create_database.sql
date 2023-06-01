@@ -43,12 +43,6 @@ CREATE TABLE tblProtocol (
   content TEXT
 );
 
-CREATE TABLE tblLogbook (
-  logbook_id INT PRIMARY KEY AUTO_INCREMENT,
-  account_id INT NOT NULL,
-  FOREIGN KEY (account_id) REFERENCES tblAccount(account_id)
-);
-
 CREATE TABLE tblEvents (
   event_id INT PRIMARY KEY AUTO_INCREMENT,
   account_id INT NOT NULL,
