@@ -34,7 +34,7 @@ pub async fn account_reset_password(
     let _db_account = match sqlx::query_as!(
         db::Account,
         "SELECT * FROM tblAccount WHERE account_id = ?",
-        updated_account.account_id
+        reset_details.account_id
     )
     .fetch_one(&mut *db_conn)
     .await
