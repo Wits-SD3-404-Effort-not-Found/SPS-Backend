@@ -41,7 +41,7 @@ fn test_auth_credentials_correct_credentials_ok() {
     let client_binding = crate::tests::CLIENT.lock().unwrap();
 
     let valid_body = super::credentials::CredentialRequest {
-        email: "2763528@students.wits.ac.za".to_string(),
+        email: "0000000@students.wits.ac.za".to_string(),
         hashed_password: "0b14d501a594442a01c6859541bcb3e8164d183d32937b851835442f69d5c94e"
             .to_string(),
     };
@@ -77,7 +77,7 @@ fn test_auth_credentials_incorrect_credentials_unauth() {
 fn test_auth_security_questions_valid_email_ok() {
     let client_binding = crate::tests::CLIENT.lock().unwrap();
     let invalid_email_body = super::security_questions::SecurityQuestionsRequest {
-        email: "2763528@students.wits.ac.za".to_string()
+        email: "0000000@students.wits.ac.za".to_string()
     };
 
 

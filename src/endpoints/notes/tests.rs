@@ -38,7 +38,7 @@ fn test_fetch_notes_non_existing_account_not_found() {
 #[test]
 fn test_fetch_notes_existing_account_no_notes_not_found() {
     let client_binding = CLIENT.lock().unwrap();
-    let response = client_binding.get(uri!(super::fetch_notes(10))).dispatch();
+    let response = client_binding.get(uri!(super::fetch_notes(2))).dispatch();
     assert_eq!(response.status(), Status::NotFound);
     assert!(response.body().is_some());
 }

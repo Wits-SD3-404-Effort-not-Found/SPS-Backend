@@ -1,3 +1,4 @@
+DROP DATABASE IF EXISTS ApolloniusTesting;
 CREATE DATABASE ApolloniusTesting;
 USE ApolloniusTesting;
 
@@ -98,7 +99,8 @@ CREATE TABLE tblStaff (
 );
 
 INSERT INTO tblAccount (email, hashed_password, username, cell_number, profile_photo) 
-VALUES ('0000000@students.wits.ac.za', '0b14d501a594442a01c6859541bcb3e8164d183d32937b851835442f69d5c94e', 'user1', '1234567890', '0x0123456789ABCDEF'); /* password_1 */
+VALUES ('0000000@students.wits.ac.za', '0b14d501a594442a01c6859541bcb3e8164d183d32937b851835442f69d5c94e', 'test_account_has_everything', '1234567890', '0x0123456789ABCDEF'); /* password_1 */
+VALUES ('1111111@students.wits.ac.za', '0b14d501a594442a01c6859541bcb3e8164d183d32937b851835442f69d5c94e', 'test_account_missing_everything', '1234567890', '0x0123456789ABCDEF'); /* password_1 */
 
 INSERT INTO tblSecurityQuestions (question) VALUES
 ('What was the name of your first pet?'),
