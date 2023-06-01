@@ -116,7 +116,8 @@ INSERT INTO tblProtocol (title, content) VALUES
 ('CPR', '1. Lean the casultys head back, with their mouth open.\n2. Perform 30 chest compressions at 100 beats per minute, or to the beat of Stayin Alive by the Bee Gees on the casultys solar plexus / end of their sternum.\n3. After 30 compressions, administer 2 breaths to the casulty.\n4.Repeat until emergency services arrive!');
 
 INSERT INTO tblNotes (account_id, title, content, public) VALUES
-(1, 'Lecture Notes', 'Today we covered respiratory physiology. Here are the key points:\n\n* Oxygen and carbon dioxide exchange occurs in the alveoli of the lungs.\n* The respiratory system is controlled by the medulla oblongata in the brainstem.\n* The diaphragm and intercostal muscles are responsible for breathing.\n\n---\n\n', 0);
+(1, 'Lecture Notes', 'Today we covered respiratory physiology. Here are the key points:\n\n* Oxygen and carbon dioxide exchange occurs in the alveoli of the lungs.\n* The respiratory system is controlled by the medulla oblongata in the brainstem.\n* The diaphragm and intercostal muscles are responsible for breathing.\n\n---\n\n', 0),
+(1, 'Study Group', 'Meeting with classmates to review material for upcoming exam. We covered:\n\n* Endocrine system\n* Renal system\n* Hematology\n\nWe created flashcards to help us memorize key concepts.\n\n---\n\n', 1);
 
 INSERT INTO tblHospital (hospital_name) VALUES
 ('St. Marys Hospital');

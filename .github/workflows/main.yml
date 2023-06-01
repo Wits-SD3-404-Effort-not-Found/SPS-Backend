@@ -31,6 +31,9 @@ jobs:
       - name: Run Cargo tests
         run: cargo test --verbose
 
+      - name: Reset Test DB
+        run: mysql -uroot -proot < ./sql/test_db_setup.sql
+
       - name: Installing Tarpaulin
         run: cargo install cargo-tarpaulin
 
