@@ -168,7 +168,7 @@ pub async fn add_questions(mut db_conn: Connection<SPS>, add_questions: Json<Add
     let db_account = match sqlx::query_as!(
         db::Account,
         "SELECT * FROM tblAccount WHERE account_id = ?",
-        &account_id,
+        &add_questions.account_id,
     )
     .fetch_one(&mut *db_conn)
     .await

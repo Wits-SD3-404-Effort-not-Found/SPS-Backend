@@ -73,7 +73,7 @@ fn test_account_reset_password_correct_answers_ok() {
     };
 
     let response = client_binding.post(uri!(super::account_reset_password))
-        .body(serde_json::to_string(&req_body))
+        .body(serde_json::to_string(&req_body).unwrap())
         .dispatch();
 
     assert_eq!(response.status(), Status::Ok);
@@ -93,7 +93,7 @@ fn test_account_reset_password_incorrect_answers_unauth() {
     };
 
     let response = client_binding.post(uri!(super::account_reset_password))
-        .body(serde_json::to_string(&req_body))
+        .body(serde_json::to_string(&req_body).unwrap())
         .dispatch();
 
     assert_eq!(response.status(), Status::Unauthorized);
@@ -113,7 +113,7 @@ fn test_account_reset_password_no_account_not_found() {
     };
 
     let response = client_binding.post(uri!(super::account_reset_password))
-        .body(serde_json::to_string(&req_body))
+        .body(serde_json::to_string(&req_body).unwrap())
         .dispatch();
 
     assert_eq!(response.status(), Status::NotFound);
@@ -133,7 +133,7 @@ fn test_add_questions_existing_account_ok() {
 
     let response = client_binding
         .post(uri!(super::add_questions))
-        .body(serde_json::to_string(&req))
+        .body(serde_json::to_string(&req_body).unwrap())
         .dispatch();
 
     assert_eq!(response.status(), Status::Ok);
@@ -153,7 +153,7 @@ fn test_add_questions_nonexisting_account_ok() {
 
     let response = client_binding
         .post(uri!(super::add_questions))
-        .body(serde_json::to_string(&req))
+        .body(serde_json::to_string(&req_body).unwrap())
         .dispatch();
 
     assert_eq!(response.status(), Status::NotFound);
