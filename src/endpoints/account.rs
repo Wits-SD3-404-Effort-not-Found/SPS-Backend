@@ -31,12 +31,24 @@ pub async fn account_reset_password(
     mut db_conn: Connection<SPS>,
     reset_details: Json<password::NewPasswordRequest>,
 ) -> ApiResult<()> {
+    let _db_account = match sqlx::query_as!(
+        db::Account,
+        "SELECT * FROM tblAccount WHERE account_id = ?",
+        updated_account.account_id
+    )
+    .fetch_one(&mut *db_conn)
+    .await
+    {
+        Ok(val) => val,
+        Err(_) => return Err(ApiErrors::NotFound("Account not found".to_string())),
+    };
+
     let account_questions = match sqlx::query!(
         "SELECT secques_id as question_id, answer as correct_answer FROM tblSecurityAnswers WHERE account_id = ?",
         &reset_details.account_id
     ).fetch_all(&mut *db_conn).await {
         Ok(val) => val,
-        Err(_) => return Err(ApiErrors::NotFound("Account not found".to_string()))
+        Err(_) => return Err(ApiErrors::InternalError("Failed to fetch answers".to_string()))
     };
 
     for sent_question in &reset_details.questions {
